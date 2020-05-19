@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
-import { View, StatusBar, Alert } from 'react-native';
+import React, {useEffect, useContext} from 'react';
+import {View, StatusBar, Alert} from 'react-native';
 import {
   DeviceWidth,
   DeviceHeight,
 } from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import AnimationComponent from '../../Modules/AnimationComponent';
-import { Divider } from 'react-native-elements';
-import { RowView } from '../../Modules/GlobalStyles/GlobalStyle';
+import {Divider} from 'react-native-elements';
+import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {ApplicationContext} from '../../Modules/context';
 
-const PaymentSuccess = ({ navigation }) => {
+const PaymentSuccess = ({navigation}) => {
+  const getStoreData = useContext(ApplicationContext);
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate('Home');
@@ -19,23 +21,30 @@ const PaymentSuccess = ({ navigation }) => {
       style={{
         flexDirection: 'column',
         height: DeviceHeight + 21,
-        backgroundColor: '#EE4B6A',
+        backgroundColor: `${
+          !getStoreData.paymentStatus ? '#EE4B6A' : '#649d66'
+        }`,
       }}>
       <StatusBar
         barStyle="dark-content"
         // dark-content, light-content and default
         hidden={false}
         //To hide statusBar
-        backgroundColor="#EE4B6A"
+        backgroundColor={!getStoreData.paymentStatus ? '#EE4B6A' : '#649d66'}
         //Background color of statusBar only works for Android
         translucent={false}
         //allowing light, but not detailed shapes
         networkActivityIndicatorVisible={true}
       />
-      <AnimationComponent />
-      <RowView fontColor={'white'} fontize={34} style={{ alignSelf: 'center' }}>
-        {' '}
-        Payment Failed !!
+      <AnimationComponent
+        isLoop={false}
+        isAutoPlay={true}
+        animationPath={!getStoreData.paymentStatus ? 'fail' : 'success'}
+      />
+      <RowView fontColor={'white'} fontize={34} style={{alignSelf: 'center'}}>
+        {!getStoreData.paymentStatus
+          ? '  Payment Failed !!'
+          : 'Payment Success !!'}
       </RowView>
     </View>
   );

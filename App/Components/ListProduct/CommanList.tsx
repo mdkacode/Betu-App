@@ -9,6 +9,7 @@ interface CommanListProps {
   title: string;
   image: string;
   address: string;
+  shopId?: string;
   action: (arg0: Object) => void;
 }
 const CommanList = (props: CommanListProps) => {

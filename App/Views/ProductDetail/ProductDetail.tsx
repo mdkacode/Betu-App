@@ -70,7 +70,6 @@ const productDescription = [
 const ProductDetail = () => {
   const getData = useContext(ApplicationContext);
   console.log(getData, 'Context Data Product');
-  getData.rating = 3;
   return (
     <LayoutContainer
       showsVerticalScrollIndicator={false}

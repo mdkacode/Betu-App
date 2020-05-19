@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {Suspense, useContext, useState, useEffect} from 'react';
+import React, {Suspense, useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -9,7 +9,7 @@ import UserProfile from '../UserProfile/UserProfile';
 import PaymentSuccess from '../Payments/PaymentSuccess';
 import GateKeeper from '../Gatekeeper/Gatekeeper';
 import LoadingComponent from '../../Components/LoadingComponent/LoadingComponent';
-import {AsyncStorage} from 'react-native';
+import Products from '../Products/Products';
 const AppHeader = React.lazy(() => import('../AppHeader/AppHeader'));
 const AppContent = React.lazy(() => import('../AppContent/AppContent'));
 const AppCart = React.lazy(() => import('../AppCart/AppCart'));
@@ -20,15 +20,6 @@ const ProductDetails = React.lazy(() =>
 const Stack = createStackNavigator();
 
 const AppLayout = (props) => {
-  let [location, setLocation] = useState(
-    {} as {title: string; address: string},
-  );
-  useEffect(() => {
-    AsyncStorage.getItem('shopInfo').then((e: any) => {
-      setLocation(JSON.parse(e));
-    });
-  }, []);
-  const getData = useContext(ApplicationContext);
   console.log(props);
   return (
     <Suspense fallback={<LoadingComponent />}>
@@ -42,17 +33,10 @@ const AppLayout = (props) => {
           <Stack.Screen
             name="Home"
             component={AppContent}
+            // component={Products}
             options={{
               headerLeft: null,
-              headerTitle: (props) => (
-                <AppHeader
-                  titleName={
-                    location.title
-                      ? location.title + ',' + location.address
-                      : 'Home'
-                  }
-                />
-              ),
+              headerTitle: (props) => <AppHeader titleName={'Home'} />,
             }}
           />
           <Stack.Screen
@@ -61,6 +45,14 @@ const AppLayout = (props) => {
             options={{
               headerShown: false,
               headerTitle: (props) => <AppHeader titleName={'Get In'} />,
+            }}
+          />
+          <Stack.Screen
+            name="Products"
+            component={Products}
+            options={{
+              headerShown: true,
+              headerTitle: (props) => <AppHeader titleName={'Products'} />,
             }}
           />
 

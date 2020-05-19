@@ -13,6 +13,7 @@ interface ButtonProps {
   borderd?: boolean;
   marginleft?: number;
   btnWidth?: number;
+  isDisable?: boolean;
   marginRight?: number;
   action?: (any) => any;
 }
@@ -29,6 +30,7 @@ const AppButton = (props: ButtonProps) => {
     backgroundColor,
     content,
     marginRight,
+    isDisable,
     marginleft,
   } = props;
   switch (borderd) {
@@ -36,6 +38,7 @@ const AppButton = (props: ButtonProps) => {
       return (
         <Button
           onPress={action}
+          disabled={isDisable}
           containerStyle={{marginLeft: marginleft || 'auto'}}
           type="outline"
           title={

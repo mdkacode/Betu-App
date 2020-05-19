@@ -1,12 +1,11 @@
 import React from 'react';
-import Provider from '../Modules/context';
 import AppLayout from './AppLayout/AppLayout';
 import {StatusBar} from 'react-native';
 const EntryComponent = () => {
   console.disableYellowBox = true;
-  const initialValue = {rating: 2};
+
   return (
-    <Provider value={initialValue}>
+    <>
       <StatusBar
         barStyle="dark-content"
         // dark-content, light-content and default
@@ -19,7 +18,7 @@ const EntryComponent = () => {
         networkActivityIndicatorVisible={true}
       />
       <AppLayout mode="dark" title="People" key="title-of-App" />
-    </Provider>
+    </>
   );
 };
 

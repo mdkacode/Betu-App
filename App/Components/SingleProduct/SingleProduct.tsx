@@ -1,78 +1,138 @@
-import React, { useState } from 'react';
-import { IconImage, RowView } from '../../Modules/GlobalStyles/GlobalStyle';
-import { View, TouchableHighlight, TouchableOpacity } from 'react-native';
+import React, {Suspense, useState, useContext} from 'react';
+import {TouchableOpacity, Image, View, AsyncStorage} from 'react-native';
+import {ListItem, Divider} from 'react-native-elements';
+import {RowView, IconImage} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
+import utils from '../../utils';
+import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
+import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 
-interface SingleProduct {
-  List: any;
-  action: any;
+interface Iprice {
+  mrp: number;
+  sp: number;
 }
-const SingleProduct = (singleProduct: SingleProduct) => {
-  let item = singleProduct['List'];
-  const [addProduct, setAddProduct] = useState(true);
-  const [cout, setCount] = useState(0);
+interface productDetailsProps {
+  name: string;
+  _id: string;
+  units: string;
+  price: Iprice;
+  quantity: number;
+  maxOrderCount: number;
+  minOrderCount: number;
+  imageList: string[];
+  isAvailable: boolean;
+}
+interface IremoteProps {
+  elements?: productDetailsProps;
+  refresh?: any;
+}
 
-  const AddProduct = () => {
-    setAddProduct(false);
-    setCount(cout + 1);
+const SingleProduct = (props: IremoteProps) => {
+  const getData = useContext(ApplicationContext);
+
+  let {productList} = getData;
+  let {
+    name,
+    price,
+    _id,
+    maxOrderCount,
+    minOrderCount,
+    imageList,
+    units,
+    isAvailable,
+  } = props.elements;
+
+  let actionObject = {
+    _id,
+    price,
+    maxOrderCount,
+    isAvailable,
+    minOrderCount,
   };
+  const [iniValue, setIniValue] = useState(0);
+
+  // Get active product Object here
+
+  const incDec = async (bool: any) => {
+    let orderCount = 0;
+    if (bool === 'least') {
+      orderCount = 1;
+      // for setting up first value on add click
+      setIniValue(1);
+    } else if (bool) {
+      orderCount = iniValue + 1;
+      iniValue < maxOrderCount && setIniValue(iniValue + 1);
+    } else {
+      orderCount = iniValue - 1;
+      iniValue > 0 && setIniValue(iniValue - 1);
+    }
+
+    let tempVar = props.elements;
+    tempVar.quantity = orderCount;
+    let isItemExists = productList.findIndex((e) => e._id == tempVar._id);
+
+    if (isItemExists === -1) {
+      productList.push(tempVar);
+    } else {
+      
+      productList.splice(isItemExists, 1, tempVar);
+    }
+    props.refresh();
+    console.log(productList, 'qwertyu');
+  };
+  // Get Active product Object End Here
   return (
-    <TouchableOpacity onPress={() => singleProduct.action(item)}>
-      <View
-        style={{
-          width: 120,
-          height: 130,
-          borderWidth: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderColor: '#1D65A6',
-          backgroundColor: '#ffff',
-          borderRadius: 14,
-          marginLeft: 10,
-        }}>
-        <IconImage
-          width={60}
-          height={60}
-          style={{ resizeMode: 'contain' }}
-          margin={4}
-          source={{ uri: `${item.image}` }}
-        />
-        <View style={{ flexDirection: 'row' }}>
-          <RowView fontColor="red" fontize={12} cut={true}>
-            {' '}
-            ₹{item.price}
-          </RowView>
-          <RowView fontColor="green" fontize={12} cut={false}>
-            {' '}
-            ₹{item.sellPrice}
-          </RowView>
-        </View>
-        <RowView fontColor="black" fontize={12}>
-          {item.name}
-        </RowView>
-        <View style={{ flexDirection: 'row' }}>
-          {!addProduct ? (
-            <>
-              <AddRemoveBtn defaultValue={0} />
-            </>
-          ) : (
-            <TouchableHighlight
-              style={{
-                backgroundColor: '#192e5b',
-                padding: 4,
-                borderRadius: 5,
-                marginBottom: 5,
-                width: 45,
-                alignItems: 'center',
-              }}
-              onPress={() => AddProduct()}
-              underlayColor="#fff">
-              <RowView fontize={10}>Add</RowView>
-            </TouchableHighlight>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ApplicationConumer>
+      {() => (
+        <Suspense
+          fallback={
+            <RowView fontize={20} fontColor="black">
+              Loading Products..
+            </RowView>
+          }>
+          <View
+            style={{
+              width: 130,
+              height: 140,
+              borderWidth: 0,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderColor: '#1D65A6',
+              backgroundColor: '#ffff',
+              borderRadius: 14,
+              marginLeft: 10,
+            }}>
+            <IconImage
+              width={60}
+              height={60}
+              style={{resizeMode: 'contain'}}
+              margin={4}
+              source={{uri: imageList[0]}}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <RowView fontColor="red" fontize={12} cut={true}>
+                {`${RupeeSymbol} ${price ? price.mrp : '--'}`}
+              </RowView>
+              <RowView fontColor="green" fontize={12} cut={false}>
+                {`${RupeeSymbol} ${price ? price.sp : '--'}`}
+              </RowView>
+            </View>
+            <RowView fontColor="black" fontize={12}>
+              {utils.trimText(name)}
+            </RowView>
+            <View style={{flexDirection: 'row', paddingBottom: 10}}>
+              <AddRemoveBtn
+                remoteValues={actionObject}
+                defaultValue={iniValue}
+                toggleAction={incDec}
+              />
+            </View>
+          </View>
+
+          <Divider style={{backgroundColor: Darkest}} />
+        </Suspense>
+      )}
+    </ApplicationConumer>
   );
 };
 

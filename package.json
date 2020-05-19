@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@react-native-community/cli": "^4.9.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.2.3",
     "@react-navigation/stack": "^5.2.18",
@@ -33,6 +34,7 @@
     "react-native-elements": "^2.0.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-popup-dialog": "^0.18.3",
+    "react-native-razorpay": "^2.1.33",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.7.0",

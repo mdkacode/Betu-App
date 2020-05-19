@@ -6,13 +6,11 @@ import {
   ScrollView,
   BackHandler,
   StyleSheet,
-  Text,
   Modal,
   Alert,
-  AsyncStorage,
-  View,
   TouchableHighlight,
 } from 'react-native';
+import {serverIP} from '../../constant';
 import CommanList from '../../Components/ListProduct/CommanList';
 // import Geolocation from '@react-native-community/geolocation';
 const Categories = React.lazy(() =>
@@ -106,6 +104,8 @@ const productDescription = [
 const AppContent = ({navigation}) => {
   // Geolocation.getCurrentPosition((info) => console.log(info));
   const [shops, setShops] = useState([]);
+  const [product, setProduct] = useState([]);
+  const [getCategory, setCategory] = useState('');
   const [perSistData, setperSistData] = useState([]); // for storing copy of the store
   const getData = useContext(ApplicationContext);
   const [locPopUp, setLocPopUp] = useState(false);
@@ -113,11 +113,12 @@ const AppContent = ({navigation}) => {
   useEffect(() => {
     Axios({
       method: 'get',
-      url: 'http://52.186.14.151/api/shopkeeper',
+      url: `${serverIP}/api/shopkeeper`,
     }).then((data: any) => {
       setShops(data.data.message);
       setperSistData(data.data.message);
     });
+
     setLocPopUp(true);
   }, []);
 
@@ -134,6 +135,7 @@ const AppContent = ({navigation}) => {
     let searchedShops = shops.filter(function (hero: any) {
       let getName = hero.businessName.toLocaleLowerCase();
       let getAddress = hero.address.areaName.toLocaleLowerCase();
+
       return (
         getName.includes(text.toLocaleLowerCase()) ||
         getAddress.includes(text.toLocaleLowerCase())
@@ -143,9 +145,23 @@ const AppContent = ({navigation}) => {
     setShops(text.length === 0 ? perSistData : searchedShops);
   };
   const selectedShop = async (e: any) => {
-    await AsyncStorage.setItem('shopInfo', JSON.stringify(e));
+    getData.shopId = e;
+    console.log('getdata', getCategory);
+    console.log('GETDATA', e.shopId);
+    Axios({
+      method: 'GET',
+      url: `${serverIP}/api/ShopProducts/namelist?_id=${e.shopId}`,
+    }).then((prod: any) => {
+      console.log(prod.data.products);
+      setProduct(prod.data.products);
+    });
+
     setLocPopUp(false);
     navigation.navigate('Home', {title: e.businessName});
+  };
+  const navigate = (e: any) => {
+    console.log('Cat data', getData.category);
+    navigation.navigate('Products', {title: 'Categories'});
   };
 
   const popUp = () => {
@@ -174,6 +190,7 @@ const AppContent = ({navigation}) => {
                 title={e.businessName}
                 action={selectedShop}
                 address={e.address.areaName}
+                shopId={e.productListId}
                 image={e.imageList[0]}
               />
             ))}
@@ -199,7 +216,7 @@ const AppContent = ({navigation}) => {
           </Suspense>
 
           <Suspense fallback={<RowView fontize={20}>Loading</RowView>}>
-            <Categories />
+            <Categories action={() => navigate(setCategory)} />
           </Suspense>
 
           <LayoutContainer marginTop={1}>
@@ -208,11 +225,19 @@ const AppContent = ({navigation}) => {
             </RowView>
             <ScrollView
               horizontal={true}
-              style={{flex: 1, height: 130, marginTop: 10}}
+              style={{flex: 1, height: 160, marginTop: 10}}
               showsHorizontalScrollIndicator={false}>
-              <Suspense fallback={<RowView fontize={20}>Loading</RowView>}>
+              <Suspense
+                fallback={
+                  <RowView fontize={20} fontColor="black">
+                    Loading Products
+                  </RowView>
+                }>
                 {product.map((e) => (
-                  <SingleProduct List={e} action={getProduct} />
+                  <SingleProduct
+                    elements={e}
+                    refresh={() => console.log('hello')}
+                  />
                 ))}
               </Suspense>
             </ScrollView>
@@ -226,9 +251,17 @@ const AppContent = ({navigation}) => {
               horizontal={true}
               style={{flex: 1, height: 220, marginTop: 5}}
               showsHorizontalScrollIndicator={false}>
-              <Suspense fallback={<RowView fontize={20}>Loading</RowView>}>
+              <Suspense
+                fallback={
+                  <RowView fontize={20} fontColor="black">
+                    Loading Products
+                  </RowView>
+                }>
                 {product.map((e) => (
-                  <SingleProduct List={e} action={getProduct} />
+                  <SingleProduct
+                    elements={e}
+                    refresh={() => console.log('hello')}
+                  />
                 ))}
               </Suspense>
             </ScrollView>

@@ -55,7 +55,12 @@ const GateKeeper = ({navigation}) => {
         marginTop={1}
         style={{backgroundColor: '#eeeee'}}>
         <View style={{alignItems: 'center'}}>
-          <AnimationComponent height={170} isLoop={false} isAutoPlay={true} />
+          <AnimationComponent
+            height={170}
+            isLoop={false}
+            fileName={'Login.json'}
+            isAutoPlay={true}
+          />
           <RowView
             fontColor="black"
             fontize={23}
