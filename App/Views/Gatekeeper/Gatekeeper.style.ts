@@ -5,17 +5,16 @@ export const Textinput = styled.TextInput`
   height: ${(p: InputProps) => p.itemHeight || 0}px;
   width: ${(p: InputProps) => p.itemWitdh || DeviceWidth}px;
   color: black;
-  font-size: 22;
-  margin-bottom: 10;
+  font-size: 22px;
+  margin-bottom: 10px;
   letter-spacing: ${(p: InputProps) => p.letterSpace || 0};
-  border-radius: 4;
+  border-radius: 4px;
   font-family: 'OpenSans-Bold';
   background-color: white;
-  border-width: 0;
 `;
 
 interface InputProps {
-    itemWitdh?: number;
-    itemHeight?: number;
-    letterSpace?: number;
+  itemWitdh?: number;
+  itemHeight?: number;
+  letterSpace?: number;
 }

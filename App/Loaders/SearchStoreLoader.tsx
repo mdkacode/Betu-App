@@ -5,52 +5,52 @@ import {DeviceWidth} from '../Components/DeviceDeminsions/DeviceDeminsions';
 const SearchStoreLoader = () => (
   <>
     <ContentLoader
-      speed={0.6}
-      width={400}
+      speed={0.4}
+      width={DeviceWidth}
       height={160}
       viewBox="0 0 400 160"
       backgroundColor="#f3f3f3"
       foregroundColor="#a9a9a9">
-      <Rect x="8" y="20" rx="14" ry="14" width="74" height="61" />
-      <Rect x="92" y="33" rx="4" ry="4" width="111" height="8" />
-      <Rect x="98" y="51" rx="5" ry="5" width="57" height="7" />
-      <Rect x="230" y="44" rx="8" ry="8" width="72" height="8" />
-      <Rect x="8" y="92" rx="14" ry="14" width="74" height="61" />
-      <Rect x="98" y="103" rx="4" ry="4" width="111" height="8" />
-      <Rect x="105" y="120" rx="5" ry="5" width="57" height="7" />
-      <Rect x="229" y="109" rx="8" ry="8" width="72" height="8" />
+      <Rect x="4" y="10" rx="17" ry="17" width="72" height="70" />
+      <Rect x="86" y="19" rx="5" ry="5" width="95" height="19" />
+      <Rect x="103" y="47" rx="5" ry="5" width="53" height="14" />
+      <Rect x="321" y="27" rx="7" ry="7" width="68" height="24" />
+      <Rect x="5" y="89" rx="17" ry="17" width="72" height="70" />
+      <Rect x="89" y="99" rx="5" ry="5" width="95" height="19" />
+      <Rect x="104" y="124" rx="5" ry="5" width="53" height="14" />
+      <Rect x="321" y="98" rx="7" ry="7" width="68" height="24" />
     </ContentLoader>
     <ContentLoader
-      speed={0.6}
-      width={400}
+      speed={0.4}
+      width={DeviceWidth}
       height={160}
       viewBox="0 0 400 160"
       backgroundColor="#f3f3f3"
       foregroundColor="#a9a9a9">
-      <Rect x="8" y="20" rx="14" ry="14" width="74" height="61" />
-      <Rect x="92" y="33" rx="4" ry="4" width="111" height="8" />
-      <Rect x="98" y="51" rx="5" ry="5" width="57" height="7" />
-      <Rect x="230" y="44" rx="8" ry="8" width="72" height="8" />
-      <Rect x="8" y="92" rx="14" ry="14" width="74" height="61" />
-      <Rect x="98" y="103" rx="4" ry="4" width="111" height="8" />
-      <Rect x="105" y="120" rx="5" ry="5" width="57" height="7" />
-      <Rect x="229" y="109" rx="8" ry="8" width="72" height="8" />
+      <Rect x="4" y="10" rx="17" ry="17" width="72" height="70" />
+      <Rect x="86" y="19" rx="5" ry="5" width="95" height="19" />
+      <Rect x="103" y="47" rx="5" ry="5" width="53" height="14" />
+      <Rect x="321" y="27" rx="7" ry="7" width="68" height="24" />
+      <Rect x="5" y="89" rx="17" ry="17" width="72" height="70" />
+      <Rect x="89" y="99" rx="5" ry="5" width="95" height="19" />
+      <Rect x="104" y="124" rx="5" ry="5" width="53" height="14" />
+      <Rect x="321" y="98" rx="7" ry="7" width="68" height="24" />
     </ContentLoader>
     <ContentLoader
-      speed={0.6}
-      width={400}
+      speed={0.4}
+      width={DeviceWidth}
       height={160}
       viewBox="0 0 400 160"
       backgroundColor="#f3f3f3"
       foregroundColor="#a9a9a9">
-      <Rect x="8" y="20" rx="14" ry="14" width="74" height="61" />
-      <Rect x="92" y="33" rx="4" ry="4" width="111" height="8" />
-      <Rect x="98" y="51" rx="5" ry="5" width="57" height="7" />
-      <Rect x="230" y="44" rx="8" ry="8" width="72" height="8" />
-      <Rect x="8" y="92" rx="14" ry="14" width="74" height="61" />
-      <Rect x="98" y="103" rx="4" ry="4" width="111" height="8" />
-      <Rect x="105" y="120" rx="5" ry="5" width="57" height="7" />
-      <Rect x="229" y="109" rx="8" ry="8" width="72" height="8" />
+      <Rect x="4" y="10" rx="17" ry="17" width="72" height="70" />
+      <Rect x="86" y="19" rx="5" ry="5" width="95" height="19" />
+      <Rect x="103" y="47" rx="5" ry="5" width="53" height="14" />
+      <Rect x="321" y="27" rx="7" ry="7" width="68" height="24" />
+      <Rect x="5" y="89" rx="17" ry="17" width="72" height="70" />
+      <Rect x="89" y="99" rx="5" ry="5" width="95" height="19" />
+      <Rect x="104" y="124" rx="5" ry="5" width="53" height="14" />
+      <Rect x="321" y="98" rx="7" ry="7" width="68" height="24" />
     </ContentLoader>
   </>
 );

@@ -1,19 +1,14 @@
 import React, {useContext, Suspense, useState, useEffect} from 'react';
 import Axios from 'axios';
-import ContentLoader, {List, Facebook} from 'react-content-loader/native';
-import _Debounce from 'lodash/debounce';
 import {
   Dimensions,
   ScrollView,
   BackHandler,
-  StyleSheet,
-  Modal,
-  Alert,
   View,
+  FlatList,
 } from 'react-native';
 import {serverIP} from '../../constant';
-import CommanList from '../../Components/ListProduct/CommanList';
-import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
+
 // import Geolocation from '@react-native-community/geolocation';
 const Categories = React.lazy(() =>
     import('../../Components/Categories/Categories'),
@@ -31,7 +26,9 @@ import {
 } from '../../Modules/GlobalStyles/GlobalStyle';
 import {ApplicationContext} from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
-import {Textinput} from '../Gatekeeper/Gatekeeper.style';
+import ProductLoader from '../../Loaders/ProductLoader';
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 const productDescription = [
   {
@@ -69,113 +66,48 @@ const productDescription = [
 // const file = require("../../assets/Actions/Payments/Success.json")
 const AppContent = ({navigation}) => {
   // Geolocation.getCurrentPosition((info) => console.log(info));
-  const [shops, setShops] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
   const [product, setProduct] = useState([]);
-  const [getCategory, setCategory] = useState('');
-  const [perSistData, setperSistData] = useState([]); // for storing copy of the store
   const getData = useContext(ApplicationContext);
-  const [locPopUp, setLocPopUp] = useState(false);
 
   useEffect(() => {
     setShowLoader(true);
-    Axios({
-      method: 'get',
-      url: `${serverIP}/api/shopkeeper`,
-    }).then((data: any) => {
-      setShops(data.data.message);
-      setperSistData(data.data.message);
-      setShowLoader(false);
-    });
-
-    setLocPopUp(true);
-  }, []);
+    (async function () {
+      let shopId = await AsyncStorage.getItem('ShopId');
+      console.log('getShopName', shopId);
+      await Axios({
+        method: 'GET',
+        url: `${serverIP}/api/ShopProducts/namelist?_id=${shopId}`,
+      })
+        .then((prod: any) => {
+          if (prod.data.products.length === 0) {
+            navigation.navigate('LocationModal');
+          } else {
+            setShowLoader(false);
+            setProduct(prod.data.products);
+          }
+        })
+        .catch((e: any) => {
+          console.log(e);
+          setShowLoader(false);
+          navigation.navigate('LocationModal');
+        });
+    })();
+  }, [getData.storeId, navigation]);
 
   BackHandler.addEventListener('hardwareBackPress', () => {
     return true;
   });
-  const getProduct = (e: any) => {
-    console.log(e);
-    navigation.navigate('ProductDetail', {
-      name: e.name,
-    });
-  };
-  const productSearch = (text: text) => {
-    let searchedShops = shops.filter(function (hero: any) {
-      let getName = hero.businessName.toLocaleLowerCase();
-      let getAddress = hero.address.areaName.toLocaleLowerCase();
-
-      return (
-        getName.includes(text.toLocaleLowerCase()) ||
-        getAddress.includes(text.toLocaleLowerCase())
-      );
-    });
-    console.log(perSistData);
-    setShops(text.length === 0 ? perSistData : searchedShops);
-  };
-  const selectedShop = async (e: any) => {
-    getData.shopId = e;
-    console.log('getdata', getCategory);
-    console.log('GETDATA', e.shopId);
-    Axios({
-      method: 'GET',
-      url: `${serverIP}/api/ShopProducts/namelist?_id=${e.shopId}`,
-    }).then((prod: any) => {
-      console.log(prod.data.products);
-      setProduct(prod.data.products);
-    });
-
-    setLocPopUp(false);
-    navigation.navigate('Home', {title: e.businessName});
-  };
-  const navigate = (e: any) => {
+  const navigate = () => {
     console.log('Cat data', getData.category);
     navigation.navigate('Products', {title: 'Categories'});
   };
 
-  const popUp = () => {
-    return (
-      <LayoutContainer
-        showsVerticalScrollIndicator={true}
-        showsHorizontalScrollIndicator={true}
-        marginTop={1}
-        style={{paddingBottom: 10}}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={locPopUp}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <Textinput
-            itemHeight={50}
-            itemWitdh={width}
-            onChangeText={_Debounce((text) => productSearch(text), 500)}
-            placeholder="Search Store ..."
-          />
-          <LayoutContainer style={{flexDirection: 'column', paddingBottom: 50}}>
-            {showLoader && <SearchStoreLoader />}
-            {shops.map((e: any) => (
-              <CommanList
-                title={e.businessName}
-                action={selectedShop}
-                address={e.address.areaName}
-                shopId={e.productListId}
-                image={e.imageList[0]}
-              />
-            ))}
-          </LayoutContainer>
-        </Modal>
-      </LayoutContainer>
-    );
-  };
-
   return (
     <>
-      {locPopUp ? (
-        popUp()
-      ) : (
+      {
         <LayoutContainer
+          style={{marginBottom: 0}}
           showsVerticalScrollIndicator={true}
           showsHorizontalScrollIndicator={false}
           marginTop={1}>
@@ -186,66 +118,108 @@ const AppContent = ({navigation}) => {
           </Suspense>
 
           <Suspense fallback={<CategoryLoader />}>
-            <Categories action={() => navigate(setCategory)} />
+            <Categories action={() => navigate()} />
           </Suspense>
 
-          <LayoutContainer marginTop={1}>
-            <RowText paddingLeft={10} fontize={18} fontColor="black">
-              Popular Products
-            </RowText>
-            <ScrollView
-              horizontal={true}
-              style={{flex: 1, height: 160, marginTop: 10}}
-              showsHorizontalScrollIndicator={false}>
-              <Suspense fallback={<CategoryLoader />}>
-                {product.length > 0 ? (
-                  product.map((e) => (
-                    <SingleProduct
-                      elements={e}
-                      refresh={() => console.log('hello')}
-                    />
-                  ))
-                ) : (
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  <View style={{alignItems: 'center', width: 400}}>
-                    <RowText fontColor="black" fontize={14}>
-                      No Product Found !!
-                    </RowText>
-                  </View>
-                )}
-              </Suspense>
-            </ScrollView>
-          </LayoutContainer>
+          {showLoader ? (
+            <ProductLoader />
+          ) : (
+            !showLoader &&
+            product.length > 1 && (
+              <LayoutContainer marginTop={0}>
+                <RowText paddingLeft={10} fontize={18} fontColor="black">
+                  Popular Products
+                </RowText>
+                <ScrollView
+                  horizontal={true}
+                  style={{flex: 1, height: 'auto', marginTop: 5}}
+                  showsHorizontalScrollIndicator={false}>
+                  <Suspense fallback={<ProductLoader />}>
+                    {product.length > 0 ? (
+                      <FlatList
+                        style={{height: 140}}
+                        data={product}
+                        horizontal
+                        renderItem={({item}) => (
+                          <SingleProduct
+                            elements={item}
+                            refresh={() => console.log('hello')}
+                          />
+                        )}
+                        keyExtractor={(item) => item._id}
+                      />
+                    ) : (
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      <View
+                        // eslint-disable-next-line react-native/no-inline-styles
+                        style={{
+                          alignItems: 'center',
+                          width: 400,
+                          paddingBottom: 30,
+                        }}>
+                        {!showLoader && (
+                          <RowText
+                            fontColor="black"
+                            fontFormat="Italic"
+                            fontize={14}>
+                            No Product Found ..
+                          </RowText>
+                        )}
+                      </View>
+                    )}
+                  </Suspense>
+                </ScrollView>
+              </LayoutContainer>
+            )
+          )}
 
-          <LayoutContainer>
-            <RowText paddingLeft={10} fontize={18} fontColor="black">
-              New Products
-            </RowText>
-            <ScrollView
-              horizontal={true}
-              style={{flex: 1, height: 220, marginTop: 5}}
-              showsHorizontalScrollIndicator={false}>
-              <Suspense fallback={<CategoryLoader />}>
-                {product.length > 0 ? (
-                  product.map((e) => (
-                    <SingleProduct
-                      elements={e}
-                      refresh={() => console.log('hello')}
-                    />
-                  ))
-                ) : (
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  <View style={{alignItems: 'center', width: 400}}>
-                    <RowText fontColor="black" fontize={14}>
-                      No Product Found !!
-                    </RowText>
-                  </View>
-                )}
-              </Suspense>
-            </ScrollView>
-          </LayoutContainer>
+          {showLoader ? (
+            <ProductLoader />
+          ) : (
+            !showLoader &&
+            product.length > 1 && (
+              <>
+                <RowText paddingLeft={10} fontize={18} fontColor="black">
+                  New Products
+                </RowText>
+                <ScrollView
+                  horizontal={true}
+                  style={{flex: 1, height: 'auto', marginTop: 0}}
+                  showsHorizontalScrollIndicator={false}>
+                  <Suspense fallback={<ProductLoader />}>
+                    {product.length > 0 ? (
+                      <FlatList
+                        style={{height: 140}}
+                        data={product}
+                        horizontal
+                        renderItem={({item}) => (
+                          <SingleProduct
+                            elements={item}
+                            refresh={() => console.log('hello')}
+                          />
+                        )}
+                        keyExtractor={(item) => item._id}
+                      />
+                    ) : (
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      <View style={{alignItems: 'center', width: 400}}>
+                        {!showLoader && (
+                          <RowText
+                            fontColor="black"
+                            fontFormat="Italic"
+                            fontize={14}>
+                            No Product Found ..
+                          </RowText>
+                        )}
+                      </View>
+                    )}
+                  </Suspense>
+                </ScrollView>
+              </>
+            )
+          )}
         </LayoutContainer>
-      )}
+      }
       <MainAppFooter isMain={{isMain: true, navigation: navigation}} />
     </>
   );

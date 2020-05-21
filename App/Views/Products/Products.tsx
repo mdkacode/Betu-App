@@ -8,6 +8,7 @@ import {ApplicationContext} from '../../Modules/context';
 import {serverIP} from '../../constant';
 import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
 import Nodata from '../../Loaders/noData';
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface totalValue {
   discount: number;
@@ -24,23 +25,32 @@ const Products = ({navigation}) => {
   const [refresh] = useState(false);
 
   useEffect(() => {
-    productList.length === 0 && Loader(true);
-    console.log('fsf', getData.shopId);
-    Axios({
-      method: 'GET',
-      url: `${serverIP}/api/ShopProducts/namelist?_id=${getData.shopId.shopId}&products.cIds=${getData.category._id}`,
-    })
-      .then((prod: any) => {
-        console.log('GET STORE DATA HERE !!', getData.productList);
-        console.log('GET FORIEGN VALUE !!', prod.data.products);
-        setProductList(prod.data.products);
-        Loader(false);
+    (async function () {
+      let storeId = await AsyncStorage.getItem('ShopId');
+      productList.length === 0 && Loader(true);
+      console.log('fsf', getData.shopId);
+      Axios({
+        method: 'GET',
+        url: `${serverIP}/api/ShopProducts/namelist?_id=${storeId}&products.cIds=${getData.category._id}`,
       })
-      .catch((e: any) => {
-        console.log(e);
-        Loader(false);
-      });
-  }, []);
+        .then((prod: any) => {
+          console.log('GET STORE DATA HERE !!', getData.productList);
+          console.log('GET FORIEGN VALUE !!', prod.data.products);
+          setProductList(prod.data.products);
+          Loader(false);
+        })
+        .catch((e: any) => {
+          console.log(e);
+          Loader(false);
+        });
+    })();
+  }, [
+    getData.category._id,
+    getData.productList,
+    getData.shopId,
+    getData.storeId,
+    productList.length,
+  ]);
   useEffect(() => {
     if (refresh) {
       console.log(getData.productList);
@@ -72,7 +82,7 @@ const Products = ({navigation}) => {
             ? productList.map((e) => (
                 <ListProduct elements={e} refresh={() => getValueHere()} />
               ))
-            : !isLoader && <Nodata navigation={navigation} />}
+            : !isLoader && <Nodata navigation={navigation} topic="Product" />}
         </View>
       </LayoutContainer>
       <MainAppFooter

@@ -160,14 +160,6 @@ const ProductDetail = () => {
         <RowText paddingLeft={10} fontize={18} fontColor="black">
           You may also Like
         </RowText>
-        <ScrollView
-          horizontal={true}
-          style={{flex: 1, height: 130, marginTop: 10}}
-          showsHorizontalScrollIndicator={false}>
-          {product.map((e) => (
-            <SingleProduct List={e} />
-          ))}
-        </ScrollView>
       </LayoutContainer>
     </LayoutContainer>
   );

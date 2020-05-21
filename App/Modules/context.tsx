@@ -24,7 +24,9 @@ const initialState = {
   userid: '9936142128',
   productList: [{} as productDetailsProps],
   shopId: {},
+  storeId: '' as string,
   category: {} as Icategory,
+  showLocatios: false as boolean,
   paymentStatus: false as boolean,
 };
 

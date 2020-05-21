@@ -1,15 +1,15 @@
 import 'react-native-gesture-handler';
-import React, {Suspense, useContext} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
-import {ApplicationContext} from '../../Modules/context';
 import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import UserProfile from '../UserProfile/UserProfile';
 import PaymentSuccess from '../Payments/PaymentSuccess';
 import GateKeeper from '../Gatekeeper/Gatekeeper';
 import Products from '../Products/Products';
 import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
+import AsyncStorage from '@react-native-community/async-storage';
+const LocationModal = React.lazy(() => import('../../Loaders/LocationModal'));
 const AppHeader = React.lazy(() => import('../AppHeader/AppHeader'));
 const AppContent = React.lazy(() => import('../AppContent/AppContent'));
 const AppCart = React.lazy(() => import('../AppCart/AppCart'));
@@ -19,8 +19,23 @@ const ProductDetails = React.lazy(() =>
 
 const Stack = createStackNavigator();
 
-const AppLayout = (props) => {
-  console.log(props);
+const AppLayout = () => {
+  const [isLogin, setLogin] = useState(false);
+  useEffect(() => {
+    (async function () {
+      try {
+        let loginS = await AsyncStorage.getItem('LoginStatus');
+        if (typeof loginS === 'string') {
+          console.log('hello');
+          setLogin(true);
+        } else {
+          setLogin(false);
+        }
+      } catch (e) {
+        setLogin(false);
+      }
+    });
+  }, []);
   return (
     <Suspense fallback={<SearchStoreLoader />}>
       <NavigationContainer>
@@ -31,20 +46,37 @@ const AppLayout = (props) => {
             },
           }}>
           <Stack.Screen
-            name="Home"
-            component={AppContent}
+            name={isLogin ? 'Home' : 'Login'}
+            component={isLogin ? AppContent : GateKeeper}
             // component={Products}
             options={{
-              headerLeft: null,
-              headerTitle: (props) => <AppHeader titleName={'Home'} />,
+              headerShown: isLogin ? true : false,
+              headerTitle: () => <AppHeader titleName={'Home'} />,
             }}
           />
+          <Stack.Screen
+            name="Home"
+            component={AppContent}
+            options={{
+              headerShown: true,
+              headerTitle: () => <AppHeader titleName={'Home'} />,
+            }}
+          />
+          <Stack.Screen
+            name="LocationModal"
+            component={LocationModal}
+            options={{
+              headerShown: true,
+              headerTitle: () => <AppHeader titleName={'Get In'} />,
+            }}
+          />
+
           <Stack.Screen
             name="GateKeeper"
             component={GateKeeper}
             options={{
               headerShown: false,
-              headerTitle: (props) => <AppHeader titleName={'Get In'} />,
+              headerTitle: () => <AppHeader titleName={'Get In'} />,
             }}
           />
           <Stack.Screen
@@ -52,35 +84,35 @@ const AppLayout = (props) => {
             component={Products}
             options={{
               headerShown: true,
-              headerTitle: (props) => <AppHeader titleName={'Products'} />,
+              headerTitle: () => <AppHeader titleName={'Products'} />,
             }}
           />
 
           <Stack.Screen
             name="Cart"
             component={AppCart}
-            options={({props}) => ({
+            options={() => ({
               headerTitle: <RowText fontColor={'black'}>Cart</RowText>,
             })}
           />
           <Stack.Screen
             name="ProductDetail"
             component={ProductDetails}
-            options={({route}) => ({
+            options={() => ({
               headerTitle: <RowText fontColor={'black'}>Product</RowText>,
             })}
           />
           <Stack.Screen
             name="UserProfile"
             component={UserProfile}
-            options={({route}) => ({
+            options={() => ({
               headerTitle: <RowText fontColor={'black'}>Profile</RowText>,
             })}
           />
           <Stack.Screen
             name="PaymentSuccess"
             component={PaymentSuccess}
-            options={({route}) => ({
+            options={() => ({
               headerShown: false,
               headerTitle: <RowText fontColor={'black'}>Profile</RowText>,
             })}

@@ -1,4 +1,6 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
+import {PermissionsAndroid} from 'react-native';
+import {getPhoneNumber} from 'react-native-device-info';
 import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {View, Animated, Keyboard} from 'react-native';
 import AnimationComponent from '../../Modules/AnimationComponent';
@@ -7,46 +9,47 @@ import {DeviceWidth} from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import AppButton from '../../Components/Button/Button';
 import {ThemeYellow, Darkest} from '../../Modules/GlobalStyles/GlobalColors';
 import {Textinput} from './Gatekeeper.style';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GateKeeper = ({navigation}) => {
+  let [userPhone, setuserPhone] = useState('');
+  let [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    userPhone === '' &&
+      (async function () {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
+        );
+        let number = await getPhoneNumber();
+        if (number !== 'unknown') {
+          number.substring(number.length - 10);
+          setuserPhone(number.substring(number.length - 10));
+        }
+      })();
+  });
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const SubmitOTP = () => {
+  const SubmitOTP = async () => {
+    await AsyncStorage.setItem('LoginStatus', 'true');
     navigation.navigate('Home', {
       name: `Welcome Mayank`,
     });
   };
-  const fadeIn = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  };
 
-  const fadeOut = () => {
-    // Will change fadeAnim value to 0 in 5 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  };
-
+  let count = 0;
   const dismissKeyboard = (text: string) => {
     if (text.length === 10) {
+      console.log('ffdfdf');
       Keyboard.dismiss();
-      fadeIn();
       ToastAndroid.showWithGravity(
         'OTP Sent.',
         ToastAndroid.SHORT,
         ToastAndroid.TOP,
       );
-    } else {
-      fadeOut();
     }
   };
+
   return (
     <>
       <LayoutContainer
@@ -58,48 +61,43 @@ const GateKeeper = ({navigation}) => {
           <AnimationComponent
             height={170}
             isLoop={false}
-            fileName={'Login.json'}
+            animationPath={'login'}
             isAutoPlay={true}
           />
           <RowText
             fontColor="black"
             fontize={23}
-            fontFormat="Italic"
+            fontFormat="bold"
             style={{marginBottom: 10}}>
-            CHIKURU
+            FIRZI
           </RowText>
           <Textinput
             itemHeight={50}
             onChangeText={(text) => dismissKeyboard(text)}
-            maxLength={10}
+            maxLength={13}
+            defaultValue={userPhone}
             placeholder="Enter Mobile Number"
             keyboardType="phone-pad"
           />
-          <Animated.View
-            style={[
-              {
-                opacity: fadeAnim, // Bind opacity to animated value
-              },
-            ]}>
-            <Textinput
-              itemHeight={50}
-              placeholder="Enter OTP"
-              onChangeText={(text) => dismissKeyboard(text)}
-              maxLength={4}
-              keyboardType="phone-pad"
-            />
-            <AppButton
-              key="WishlistButton"
-              borderd={true}
-              backgroundColor={ThemeYellow}
-              fontColor={Darkest}
-              content={<RowText fontColor={'black'}>Submit</RowText>}
-              btnWidth={DeviceWidth - 12}
-              marginRight={10}
-              marginleft={1}
-              action={() => SubmitOTP()}
-            />
-          </Animated.View>
+
+          <Textinput
+            itemHeight={50}
+            placeholder="Enter OTP"
+            // onChangeText={(text) => dismissKeyboard(text)}
+            maxLength={4}
+            keyboardType="phone-pad"
+          />
+          <AppButton
+            key="WishlistButton"
+            borderd={true}
+            backgroundColor={ThemeYellow}
+            fontColor={Darkest}
+            content={<RowText fontColor={'black'}>{`Submit`}</RowText>}
+            btnWidth={DeviceWidth - 12}
+            marginRight={10}
+            marginleft={1}
+            action={() => SubmitOTP()}
+          />
         </View>
       </LayoutContainer>
     </>

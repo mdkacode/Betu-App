@@ -4,8 +4,8 @@ import {
   AppView,
   IconImage,
 } from '../../Modules/GlobalStyles/GlobalStyle';
-import { TouchableOpacity } from 'react-native';
-import { Badge } from 'react-native-elements';
+import {TouchableOpacity} from 'react-native';
+import {Badge} from 'react-native-elements';
 
 interface FooterContent {
   action: any;
@@ -37,18 +37,20 @@ const FooterContent = (props: FooterContent) => {
 
           <Badge
             status="error"
-            containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+            containerStyle={{position: 'absolute', top: -4, right: -4}}
             value={4}
           />
         </AppView>
       </TouchableOpacity>
-      <AppView items={5}>
-        <IconImage
-          source={require('../../assets/images/icons/list.png')}
-          width={30}
-          height={30}
-        />
-      </AppView>
+      <TouchableOpacity onPress={(e) => props.action('LocationModal')}>
+        <AppView items={5}>
+          <IconImage
+            source={require('../../assets/images/icons/list.png')}
+            width={30}
+            height={30}
+          />
+        </AppView>
+      </TouchableOpacity>
       <TouchableOpacity onPress={(e) => props.action('UserProfile')}>
         <AppView items={5}>
           <IconImage

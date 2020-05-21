@@ -17,7 +17,7 @@ const EntryComponent = () => {
         //allowing light, but not detailed shapes
         networkActivityIndicatorVisible={true}
       />
-      <AppLayout mode="dark" title="People" key="title-of-App" />
+      <AppLayout />
     </>
   );
 };

@@ -7,20 +7,24 @@ const Categories = React.lazy(() =>
   CategoryLoader = React.lazy(() => import('./CategoryLoader'));
 interface InoData {
   navigation: any;
+  topic?: string;
 }
 const Nodata = (props: InoData) => {
+  let {navigation, topic} = props;
   const [getCategory, setCategory] = useState('');
   const navigate = (e: any) => {
-    props.navigation.navigate('Products', {title: 'Categories'});
+    navigation.navigate('Products', {title: 'Categories'});
   };
 
+  const fontFormat = 'Italic';
   return (
     <LayoutContainer>
       <RowText
         fontColor={Darkest}
-        fontFoarmat="Italic"
+        fontFormat="Italic"
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{alignSelf: 'center'}}>
-        No data Found
+        {`No ${topic ? topic : 'Data'} Found ...`}
       </RowText>
       <Suspense fallback={<CategoryLoader />}>
         <Categories action={() => navigate(setCategory)} />

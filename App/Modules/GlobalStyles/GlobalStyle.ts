@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 
 export const Container = styled.View`
@@ -35,8 +35,8 @@ export const RowText = styled.Text`
     p.fontFormat === 'Italic'
       ? 'OpenSans-Italic'
       : p.fontFormat === 'Normal'
-      ? 'OpenSans'
-      : 'OpenSans-Bold'};
+        ? 'OpenSans'
+        : 'OpenSans-Bold'};
 `;
 
 export const HorizontalViewScroll = styled.ScrollView`
