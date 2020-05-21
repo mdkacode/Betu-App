@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, Image} from 'react-native';
 import {ListItem, Divider} from 'react-native-elements';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
 import {Darkest} from '../../Modules/GlobalStyles/GlobalColors';
 
@@ -28,19 +28,19 @@ const CommanList = (props: CommanListProps) => {
         }
         key={'product'}
         subtitle={
-          <RowView fontColor={'black'} fontize={12} fontFormat="Italic">
+          <RowText fontColor={'black'} fontize={12} fontFormat="Italic">
             {address}
-          </RowView>
+          </RowText>
         }
         title={
-          <RowView fontColor={'black'} fontize={14}>
+          <RowText fontColor={'black'} fontize={14}>
             {title}
-          </RowView>
+          </RowText>
         }
         rightTitle={
-          <RowView fontColor={'black'} fontize={14}>
+          <RowText fontColor={'black'} fontize={14}>
             2 KM Away
-          </RowView>
+          </RowText>
         }
       />
       <Divider style={{backgroundColor: Darkest}} />

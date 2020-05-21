@@ -1,7 +1,7 @@
-import React, {Suspense, useState, useContext} from 'react';
+import React, {Suspense, useState, useEffect, useContext} from 'react';
 import {Image, View} from 'react-native';
 import {ListItem, Divider} from 'react-native-elements';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
 import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
@@ -16,6 +16,8 @@ interface productDetailsProps {
   units: string;
   price: Iprice;
   quantity: number;
+  storeId: string;
+  userId: string;
   maxOrderCount: number;
   minOrderCount: number;
   imageList: string[];
@@ -28,7 +30,11 @@ interface IremoteProps {
 
 const ListProduct = (props: IremoteProps) => {
   const getData = useContext(ApplicationContext);
-
+  useEffect(() => {
+    return () => {
+      console.log('ISLEAVING', getData.productList);
+    };
+  }, [getData.productList]);
   let {productList} = getData; // getting data from the store
 
   let {
@@ -70,6 +76,9 @@ const ListProduct = (props: IremoteProps) => {
     console.log('propduct count is ', orderCount);
     let tempVar = props.elements;
     tempVar.quantity = orderCount;
+    tempVar.storeId = getData.shopId.shopId;
+    tempVar.userId = getData.userid;
+    console.log(tempVar);
     let isItemExists = productList.findIndex((e) => e._id == tempVar._id);
     if (orderCount === 0) {
       productList.splice(isItemExists, 1);
@@ -93,7 +102,7 @@ const ListProduct = (props: IremoteProps) => {
   return (
     <ApplicationConumer>
       {() => (
-        <Suspense fallback={<RowView fontize={20}>Loading</RowView>}>
+        <Suspense fallback={<RowText fontize={20}>Loading</RowText>}>
           <ListItem
             containerStyle={[{backgroundColor: '#eeeeee'}]}
             leftElement={
@@ -107,25 +116,25 @@ const ListProduct = (props: IremoteProps) => {
             key={'product'}
             subtitle={
               <View style={{flexDirection: 'row'}}>
-                <RowView
+                <RowText
                   fontColor={'red'}
                   fontize={12}
                   cut={true}
                   fontFormat="Italic">
                   {`${RupeeSymbol} ${price ? price.mrp : 'No Price Found'}`}
-                </RowView>
-                <RowView
+                </RowText>
+                <RowText
                   style={{paddingLeft: 5}}
                   fontColor={'green'}
                   fontize={14}>
                   {`${RupeeSymbol} ${price ? price.sp : 'No Price Found'}`}
-                </RowView>
+                </RowText>
               </View>
             }
             title={
-              <RowView fontColor={'black'} fontize={14}>
+              <RowText fontColor={'black'} fontize={14}>
                 {name}
-              </RowView>
+              </RowText>
             }
             rightTitle={
               <AddRemoveBtn

@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {View} from 'react-native';
-import {LayoutContainer, RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {Divider} from 'react-native-elements';
 import MyCarousel from '../../Components/Corusal/corusoal';
 import AppButton from '../../Components/Button/Button';
@@ -97,9 +97,9 @@ const ProductDetail = () => {
             backgroundColor: '#eeeee',
             left: 0,
           }}>
-          <RowView fontColor={'black'} fontize={22} style={{marginRight: 20}}>
+          <RowText fontColor={'black'} fontize={22} style={{marginRight: 20}}>
             Pepsi (330 ml)
-          </RowView>
+          </RowText>
           <AppButton
             key="cartButton"
             borderd={true}
@@ -157,9 +157,9 @@ const ProductDetail = () => {
         />
       </View>
       <LayoutContainer marginTop={1}>
-        <RowView paddingLeft={10} fontize={18} fontColor="black">
+        <RowText paddingLeft={10} fontize={18} fontColor="black">
           You may also Like
-        </RowView>
+        </RowText>
         <ScrollView
           horizontal={true}
           style={{flex: 1, height: 130, marginTop: 10}}

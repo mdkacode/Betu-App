@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {RowView, Container} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText, Container} from '../../Modules/GlobalStyles/GlobalStyle';
 import {View, Alert} from 'react-native';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -63,12 +63,12 @@ const FooterActionContent = (props: ActionProps) => {
         }}>
         <View style={{flexDirection: 'column'}}>
           <>
-            <RowView fontFormat={'Normal'}>
+            <RowText fontFormat={'Normal'}>
               TOTAL: {` ${RupeeSymbol} ${action ? action.totalPrice : 0}`}
-            </RowView>
-            <RowView fontFormat={'Italic'} fontize={15} fontColor={ThemeYellow}>
+            </RowText>
+            <RowText fontFormat={'Italic'} fontize={15} fontColor={ThemeYellow}>
               Saving: {` ${RupeeSymbol} ${action ? action.discount : 0}`}
-            </RowView>
+            </RowText>
           </>
         </View>
 

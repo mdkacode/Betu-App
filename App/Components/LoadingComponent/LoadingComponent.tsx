@@ -1,12 +1,12 @@
 import React from 'react';
 import {View} from 'react-native';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 const LoadingComponent = () => {
   return (
     <View style={{jusifyContent: 'center', alignItems: 'center'}}>
-      <RowView fontColor={'grey'} fontize={12}>
+      <RowText fontColor={'grey'} fontize={12}>
         {taugth}
-      </RowView>
+      </RowText>
     </View>
   );
 };

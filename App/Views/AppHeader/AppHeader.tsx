@@ -3,7 +3,7 @@ import {Dimensions} from 'react-native';
 import {
   Container,
   AppView,
-  RowView,
+  RowText,
   IconImage,
 } from '../../Modules/GlobalStyles/GlobalStyle';
 
@@ -19,9 +19,9 @@ const AppHeader = (props: NavProps) => (
         marginHeight={1}
         height={25}
         iPosition={'flex-start'}>
-        <RowView paddingLeft={0} fontColor="black">
+        <RowText paddingLeft={0} fontColor="black">
           {props.titleName}
-        </RowView>
+        </RowText>
       </AppView>
       <AppView marginHeight={1} height={5} iPosition={'flex-end'}>
         <IconImage

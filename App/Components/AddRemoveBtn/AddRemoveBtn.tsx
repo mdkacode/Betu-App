@@ -1,7 +1,7 @@
 import React, {useState, Suspense} from 'react';
 import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 
 interface Iprice {
   mrp: number;
@@ -29,14 +29,14 @@ const AddRemoveBtn = (props: AddRemoveBtnProps) => {
         style={style.mainStyle}
         onPress={() => toggleAction('least')}
         underlayColor="#fff">
-        <RowView fontize={12}>Add</RowView>
+        <RowText fontize={12}>Add</RowText>
       </TouchableHighlight>
     );
   };
   const sizeBtn = () => {
     return (
       <>
-        <Suspense fallback={<RowView fontize={20}>Loading...</RowView>}>
+        <Suspense fallback={<RowText fontize={20}>Loading...</RowText>}>
           <TouchableOpacity onPress={() => toggleAction(false)}>
             <Image
               source={require('../../assets/images/icons/minus.png')}

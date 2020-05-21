@@ -1,11 +1,13 @@
 import React, {Suspense, useState, useContext} from 'react';
 import {TouchableOpacity, Image, View, AsyncStorage} from 'react-native';
 import {ListItem, Divider} from 'react-native-elements';
-import {RowView, IconImage} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText, IconImage} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
+import ContentLoader, {List} from 'react-content-loader';
 import utils from '../../utils';
 import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
+import CategoryLoader from '../../Loaders/CategoryLoader';
 
 interface Iprice {
   mrp: number;
@@ -74,7 +76,6 @@ const SingleProduct = (props: IremoteProps) => {
     if (isItemExists === -1) {
       productList.push(tempVar);
     } else {
-      
       productList.splice(isItemExists, 1, tempVar);
     }
     props.refresh();
@@ -84,12 +85,7 @@ const SingleProduct = (props: IremoteProps) => {
   return (
     <ApplicationConumer>
       {() => (
-        <Suspense
-          fallback={
-            <RowView fontize={20} fontColor="black">
-              Loading Products..
-            </RowView>
-          }>
+        <Suspense fallback={<CategoryLoader />}>
           <View
             style={{
               width: 130,
@@ -110,16 +106,16 @@ const SingleProduct = (props: IremoteProps) => {
               source={{uri: imageList[0]}}
             />
             <View style={{flexDirection: 'row'}}>
-              <RowView fontColor="red" fontize={12} cut={true}>
+              <RowText fontColor="red" fontize={12} cut={true}>
                 {`${RupeeSymbol} ${price ? price.mrp : '--'}`}
-              </RowView>
-              <RowView fontColor="green" fontize={12} cut={false}>
+              </RowText>
+              <RowText fontColor="green" fontize={12} cut={false}>
                 {`${RupeeSymbol} ${price ? price.sp : '--'}`}
-              </RowView>
+              </RowText>
             </View>
-            <RowView fontColor="black" fontize={12}>
+            <RowText fontColor="black" fontize={12}>
               {utils.trimText(name)}
-            </RowView>
+            </RowText>
             <View style={{flexDirection: 'row', paddingBottom: 10}}>
               <AddRemoveBtn
                 remoteValues={actionObject}

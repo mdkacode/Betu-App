@@ -7,6 +7,8 @@ interface productDetailsProps {
   units: string;
   price: Iprice;
   quantity: number;
+  storeId: string;
+  userId: string;
   maxOrderCount: number;
   minOrderCount: number;
   imageList: string[];
@@ -19,6 +21,7 @@ interface Icategory {
 
 const initialState = {
   rating: 1,
+  userid: '9936142128',
   productList: [{} as productDetailsProps],
   shopId: {},
   category: {} as Icategory,

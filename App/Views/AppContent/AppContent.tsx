@@ -1,5 +1,6 @@
 import React, {useContext, Suspense, useState, useEffect} from 'react';
 import Axios from 'axios';
+import ContentLoader, {List, Facebook} from 'react-content-loader/native';
 import _Debounce from 'lodash/debounce';
 import {
   Dimensions,
@@ -8,10 +9,11 @@ import {
   StyleSheet,
   Modal,
   Alert,
-  TouchableHighlight,
+  View,
 } from 'react-native';
 import {serverIP} from '../../constant';
 import CommanList from '../../Components/ListProduct/CommanList';
+import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
 // import Geolocation from '@react-native-community/geolocation';
 const Categories = React.lazy(() =>
     import('../../Components/Categories/Categories'),
@@ -24,48 +26,12 @@ const Categories = React.lazy(() =>
 const {width} = Dimensions.get('window');
 import {
   LayoutContainer,
-  RowView,
+  RowText,
   AppView,
 } from '../../Modules/GlobalStyles/GlobalStyle';
 import {ApplicationContext} from '../../Modules/context';
+import CategoryLoader from '../../Loaders/CategoryLoader';
 import {Textinput} from '../Gatekeeper/Gatekeeper.style';
-
-const product = [
-  {
-    name: 'Lays Chips',
-    image:
-      'https://www.lays.ca/sites/lays.ca/files/30015469_Lay%27s_Roast%20Chicken_235g.png',
-    price: '20',
-    sellPrice: '10',
-  },
-  {
-    name: 'Amala Juice',
-    image:
-      'https://www.patanjaliayurved.net/assets/product_images/400x500/amlajuice500ml400500.png',
-    price: '40',
-    sellPrice: '30',
-  },
-  {
-    name: 'Potato',
-    image:
-      'https://www.ilpomodoropetti.com/wp-content/uploads/2017/01/pomo_petti_100_3.png',
-    price: '120',
-    sellPrice: '110',
-  },
-  {
-    name: 'Potato',
-    image:
-      'https://3.imimg.com/data3/HF/NT/MY-11459200/chilled-potatoes-500x500.png',
-    price: '80',
-    sellPrice: '55',
-  },
-  {
-    name: '5 Start',
-    image: 'https://choosefresh.in/image/cache/data/chocolates/3-500x500.png',
-    price: '70',
-    sellPrice: '60',
-  },
-];
 
 const productDescription = [
   {
@@ -104,6 +70,7 @@ const productDescription = [
 const AppContent = ({navigation}) => {
   // Geolocation.getCurrentPosition((info) => console.log(info));
   const [shops, setShops] = useState([]);
+  const [showLoader, setShowLoader] = useState(false);
   const [product, setProduct] = useState([]);
   const [getCategory, setCategory] = useState('');
   const [perSistData, setperSistData] = useState([]); // for storing copy of the store
@@ -111,12 +78,14 @@ const AppContent = ({navigation}) => {
   const [locPopUp, setLocPopUp] = useState(false);
 
   useEffect(() => {
+    setShowLoader(true);
     Axios({
       method: 'get',
       url: `${serverIP}/api/shopkeeper`,
     }).then((data: any) => {
       setShops(data.data.message);
       setperSistData(data.data.message);
+      setShowLoader(false);
     });
 
     setLocPopUp(true);
@@ -185,6 +154,7 @@ const AppContent = ({navigation}) => {
             placeholder="Search Store ..."
           />
           <LayoutContainer style={{flexDirection: 'column', paddingBottom: 50}}>
+            {showLoader && <SearchStoreLoader />}
             {shops.map((e: any) => (
               <CommanList
                 title={e.businessName}
@@ -209,60 +179,68 @@ const AppContent = ({navigation}) => {
           showsVerticalScrollIndicator={true}
           showsHorizontalScrollIndicator={false}
           marginTop={1}>
-          <Suspense fallback={<RowView fontize={20}>Loading</RowView>}>
+          <Suspense fallback={<CategoryLoader />}>
             <AppView width={width} height={200} marginHeight={10}>
               <MyCorsoal content={productDescription} height={2} />
             </AppView>
           </Suspense>
 
-          <Suspense fallback={<RowView fontize={20}>Loading</RowView>}>
+          <Suspense fallback={<CategoryLoader />}>
             <Categories action={() => navigate(setCategory)} />
           </Suspense>
 
           <LayoutContainer marginTop={1}>
-            <RowView paddingLeft={10} fontize={18} fontColor="black">
+            <RowText paddingLeft={10} fontize={18} fontColor="black">
               Popular Products
-            </RowView>
+            </RowText>
             <ScrollView
               horizontal={true}
               style={{flex: 1, height: 160, marginTop: 10}}
               showsHorizontalScrollIndicator={false}>
-              <Suspense
-                fallback={
-                  <RowView fontize={20} fontColor="black">
-                    Loading Products
-                  </RowView>
-                }>
-                {product.map((e) => (
-                  <SingleProduct
-                    elements={e}
-                    refresh={() => console.log('hello')}
-                  />
-                ))}
+              <Suspense fallback={<CategoryLoader />}>
+                {product.length > 0 ? (
+                  product.map((e) => (
+                    <SingleProduct
+                      elements={e}
+                      refresh={() => console.log('hello')}
+                    />
+                  ))
+                ) : (
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  <View style={{alignItems: 'center', width: 400}}>
+                    <RowText fontColor="black" fontize={14}>
+                      No Product Found !!
+                    </RowText>
+                  </View>
+                )}
               </Suspense>
             </ScrollView>
           </LayoutContainer>
 
           <LayoutContainer>
-            <RowView paddingLeft={10} fontize={18} fontColor="black">
+            <RowText paddingLeft={10} fontize={18} fontColor="black">
               New Products
-            </RowView>
+            </RowText>
             <ScrollView
               horizontal={true}
               style={{flex: 1, height: 220, marginTop: 5}}
               showsHorizontalScrollIndicator={false}>
-              <Suspense
-                fallback={
-                  <RowView fontize={20} fontColor="black">
-                    Loading Products
-                  </RowView>
-                }>
-                {product.map((e) => (
-                  <SingleProduct
-                    elements={e}
-                    refresh={() => console.log('hello')}
-                  />
-                ))}
+              <Suspense fallback={<CategoryLoader />}>
+                {product.length > 0 ? (
+                  product.map((e) => (
+                    <SingleProduct
+                      elements={e}
+                      refresh={() => console.log('hello')}
+                    />
+                  ))
+                ) : (
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  <View style={{alignItems: 'center', width: 400}}>
+                    <RowText fontColor="black" fontize={14}>
+                      No Product Found !!
+                    </RowText>
+                  </View>
+                )}
               </Suspense>
             </ScrollView>
           </LayoutContainer>
@@ -274,42 +252,3 @@ const AppContent = ({navigation}) => {
 };
 
 export default AppContent;
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-});

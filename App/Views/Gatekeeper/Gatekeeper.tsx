@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {LayoutContainer, RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {View, Animated, Keyboard} from 'react-native';
 import AnimationComponent from '../../Modules/AnimationComponent';
 import {ToastAndroid} from 'react-native';
@@ -61,13 +61,13 @@ const GateKeeper = ({navigation}) => {
             fileName={'Login.json'}
             isAutoPlay={true}
           />
-          <RowView
+          <RowText
             fontColor="black"
             fontize={23}
             fontFormat="Italic"
             style={{marginBottom: 10}}>
             CHIKURU
-          </RowView>
+          </RowText>
           <Textinput
             itemHeight={50}
             onChangeText={(text) => dismissKeyboard(text)}
@@ -93,7 +93,7 @@ const GateKeeper = ({navigation}) => {
               borderd={true}
               backgroundColor={ThemeYellow}
               fontColor={Darkest}
-              content={<RowView fontColor={'black'}>Submit</RowView>}
+              content={<RowText fontColor={'black'}>Submit</RowText>}
               btnWidth={DeviceWidth - 12}
               marginRight={10}
               marginleft={1}

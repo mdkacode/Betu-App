@@ -1,12 +1,13 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, Suspense} from 'react';
 import {ScrollView, View, Dimensions, TouchableOpacity} from 'react-native';
 import {ApplicationContext} from '../../Modules/context';
 import {
   IconImage,
-  RowView,
+  RowText,
   CircleArea,
   LayoutContainer,
 } from '../../Modules/GlobalStyles/GlobalStyle';
+import CategoryLoader from '../../Loaders/CategoryLoader';
 import {serverIP} from '../../constant';
 import Axios from 'axios';
 const windowWidth = Dimensions.get('window').width;
@@ -19,13 +20,16 @@ const Categories = (props: catProps) => {
   const storeData = useContext(ApplicationContext);
   let {action} = props;
   const [categories, setCategories] = useState([]);
+  const [isLoader, Loader] = useState(false);
   useEffect(() => {
+    Loader(true);
     Axios({
       method: 'GET',
       url: `${serverIP}/api/category`,
     }).then((e) => {
       console.log(e, 'datassss');
       setCategories(e.data.message);
+      Loader(false);
     });
   }, []);
   const selectCategory = (data: any) => {
@@ -38,34 +42,37 @@ const Categories = (props: catProps) => {
   };
 
   return (
-    <LayoutContainer marginTop={1}>
-      <RowView paddingLeft={10} fontize={18} fontColor="black">
-        Pick From Category
-      </RowView>
-      <ScrollView
-        horizontal={true}
-        style={{flex: 1, height: windowHeight / 8}}
-        showsHorizontalScrollIndicator={false}>
-        {categories.map((element: any) => (
-          <TouchableOpacity onPress={() => selectCategory(element)}>
-            <CircleArea height={500} width={windowWidth / 6}>
-              <View style={{flex: 1, flexDirection: 'column'}}>
-                <IconImage
-                  source={{uri: element.imageList[0]}}
-                  width={30}
-                  height={30}
-                  margin={12}
-                />
+    <Suspense fallback={<CategoryLoader />}>
+      <LayoutContainer marginTop={1}>
+        <RowText paddingLeft={10} fontize={18} fontColor="black">
+          Pick From Category
+        </RowText>
+        <ScrollView
+          horizontal={true}
+          style={{flex: 1, height: windowHeight / 8}}
+          showsHorizontalScrollIndicator={false}>
+          {isLoader && <CategoryLoader />}
+          {categories.map((element: any) => (
+            <TouchableOpacity onPress={() => selectCategory(element)}>
+              <CircleArea height={500} width={windowWidth / 6}>
+                <View style={{flex: 1, flexDirection: 'column'}}>
+                  <IconImage
+                    source={{uri: element.imageList[0]}}
+                    width={30}
+                    height={30}
+                    margin={12}
+                  />
 
-                <RowView paddingLeft={5} fontize={12} fontColor="black">
-                  {element.name}
-                </RowView>
-              </View>
-            </CircleArea>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </LayoutContainer>
+                  <RowText paddingLeft={5} fontize={12} fontColor="black">
+                    {element.name}
+                  </RowText>
+                </View>
+              </CircleArea>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </LayoutContainer>
+    </Suspense>
   );
 };
 

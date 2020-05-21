@@ -6,7 +6,7 @@ import {
 } from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import AnimationComponent from '../../Modules/AnimationComponent';
 import {Divider} from 'react-native-elements';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {ApplicationContext} from '../../Modules/context';
 
 const PaymentSuccess = ({navigation}) => {
@@ -41,11 +41,11 @@ const PaymentSuccess = ({navigation}) => {
         isAutoPlay={true}
         animationPath={!getStoreData.paymentStatus ? 'fail' : 'success'}
       />
-      <RowView fontColor={'white'} fontize={34} style={{alignSelf: 'center'}}>
+      <RowText fontColor={'white'} fontize={34} style={{alignSelf: 'center'}}>
         {!getStoreData.paymentStatus
           ? '  Payment Failed !!'
           : 'Payment Success !!'}
-      </RowView>
+      </RowText>
     </View>
   );
 };

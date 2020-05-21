@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
-import { Dimensions } from 'react-native';
+import {Dimensions} from 'react-native';
 const windowWidth = Dimensions.get('window').width;
-//  const windowHeight = Dimensions.get('window').height;
 
 export const Container = styled.View`
   flex: 1;
@@ -21,7 +20,7 @@ export const AppView = styled.View`
   padding-left: ${(p: viewProps) => (p.marginLeft ? p.marginLeft : 0)}px;
 `;
 
-export const RowView = styled.Text`
+export const RowText = styled.Text`
   padding-left: ${(p: textProps) => (p.paddingLeft ? p.paddingLeft : 0)}px;
   padding-right: ${(p: textProps) => (p.paddingRight ? p.paddingRight : 0)}px;
   padding-top: ${(p: textProps) => (p.padding ? p.padding : 0)}px;
@@ -33,11 +32,11 @@ export const RowView = styled.Text`
   margin-left: ${(p: textProps) => (p.paddingLeft ? p.paddingLeft : 0)}px;
   color: ${(p: textProps) => (p.fontColor ? p.fontColor : 'white')};
   font-family: ${(p: textProps) =>
-    p.fontFormat == 'Italic'
+    p.fontFormat === 'Italic'
       ? 'OpenSans-Italic'
-      : p.fontFormat == 'Normal'
-        ? 'OpenSans'
-        : 'OpenSans-Bold'};
+      : p.fontFormat === 'Normal'
+      ? 'OpenSans'
+      : 'OpenSans-Bold'};
 `;
 
 export const HorizontalViewScroll = styled.ScrollView`

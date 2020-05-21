@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableHighlight, View} from 'react-native';
 import {Button} from 'react-native-elements';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {Darkest, ThemeYellow} from '../../Modules/GlobalStyles/GlobalColors';
 import {DeviceWidth} from '../DeviceDeminsions/DeviceDeminsions';
 
@@ -42,9 +42,9 @@ const AppButton = (props: ButtonProps) => {
           containerStyle={{marginLeft: marginleft || 'auto'}}
           type="outline"
           title={
-            <RowView fontize={14} fontColor={fontColor || ThemeYellow}>
+            <RowText fontize={14} fontColor={fontColor || ThemeYellow}>
               {content}
-            </RowView>
+            </RowText>
           }
           // eslint-disable-next-line react-native/no-inline-styles
           buttonStyle={{

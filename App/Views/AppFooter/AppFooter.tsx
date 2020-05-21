@@ -31,12 +31,12 @@ const MainAppFooter = (props: FooterProps) => {
         <FooterActionContent action={action} navigation={isMain.navigation} />
       )}
 
-      {/* <FooterCircle ><RowView fontColor="black" > <IconImage
+      {/* <FooterCircle ><RowText fontColor="black" > <IconImage
       source={require('../../assets/images/icons/shop.png')}
       width={40}
       height={40}
       marginLeft={"1"}
-    /></RowView></FooterCircle> */}
+    /></RowText></FooterCircle> */}
     </AppFooter>
   );
 };

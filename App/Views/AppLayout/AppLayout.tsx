@@ -4,12 +4,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {ApplicationContext} from '../../Modules/context';
-import {RowView} from '../../Modules/GlobalStyles/GlobalStyle';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import UserProfile from '../UserProfile/UserProfile';
 import PaymentSuccess from '../Payments/PaymentSuccess';
 import GateKeeper from '../Gatekeeper/Gatekeeper';
-import LoadingComponent from '../../Components/LoadingComponent/LoadingComponent';
 import Products from '../Products/Products';
+import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
 const AppHeader = React.lazy(() => import('../AppHeader/AppHeader'));
 const AppContent = React.lazy(() => import('../AppContent/AppContent'));
 const AppCart = React.lazy(() => import('../AppCart/AppCart'));
@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 const AppLayout = (props) => {
   console.log(props);
   return (
-    <Suspense fallback={<LoadingComponent />}>
+    <Suspense fallback={<SearchStoreLoader />}>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
@@ -60,21 +60,21 @@ const AppLayout = (props) => {
             name="Cart"
             component={AppCart}
             options={({props}) => ({
-              headerTitle: <RowView fontColor={'black'}>Cart</RowView>,
+              headerTitle: <RowText fontColor={'black'}>Cart</RowText>,
             })}
           />
           <Stack.Screen
             name="ProductDetail"
             component={ProductDetails}
             options={({route}) => ({
-              headerTitle: <RowView fontColor={'black'}>Product</RowView>,
+              headerTitle: <RowText fontColor={'black'}>Product</RowText>,
             })}
           />
           <Stack.Screen
             name="UserProfile"
             component={UserProfile}
             options={({route}) => ({
-              headerTitle: <RowView fontColor={'black'}>Profile</RowView>,
+              headerTitle: <RowText fontColor={'black'}>Profile</RowText>,
             })}
           />
           <Stack.Screen
@@ -82,7 +82,7 @@ const AppLayout = (props) => {
             component={PaymentSuccess}
             options={({route}) => ({
               headerShown: false,
-              headerTitle: <RowView fontColor={'black'}>Profile</RowView>,
+              headerTitle: <RowText fontColor={'black'}>Profile</RowText>,
             })}
           />
         </Stack.Navigator>
