@@ -26,15 +26,8 @@ const LocationModal = ({navigation}) => {
   const [perSistData, setperSistData] = useState([]); // for storing copy of the store
   const [locPopUp, setLocPopUp] = useState(false);
   const [view, isView] = useState(false);
+
   useEffect(() => {
-    console.log(
-      'qwertyuioiuytrewqwertyuiopoiuytrewqwertyuiopoiuytrewqwertyuiopoiuytrew',
-    );
-  });
-  useEffect(() => {
-    console.log(
-      'qwertyuioiuytrewqwertyuiopoiuytrewqwertyuiopoiuytrewqwertyuiopoiuytrew',
-    );
     setShowLoader(true);
     Axios({
       method: 'get',
@@ -85,7 +78,7 @@ const LocationModal = ({navigation}) => {
         transparent={true}
         visible={locPopUp}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          setLocPopUp(false);
         }}>
         <Textinput
           itemHeight={50}

@@ -27,6 +27,7 @@ interface productDetailsProps {
 interface IremoteProps {
   elements?: productDetailsProps;
   refresh?: any;
+  productDetail?: ({}) => void;
 }
 
 const SingleProduct = (props: IremoteProps) => {
@@ -98,13 +99,16 @@ const SingleProduct = (props: IremoteProps) => {
               borderRadius: 14,
               marginLeft: 10,
             }}>
-            <IconImage
-              width={60}
-              height={60}
-              style={{resizeMode: 'contain'}}
-              margin={4}
-              source={{uri: imageList[0]}}
-            />
+            <TouchableOpacity
+              onPress={() => props.productDetail(props.elements)}>
+              <IconImage
+                width={60}
+                height={60}
+                style={{resizeMode: 'contain'}}
+                margin={4}
+                source={{uri: imageList[0]}}
+              />
+            </TouchableOpacity>
             <View style={{flexDirection: 'row'}}>
               <RowText fontColor="red" fontize={12} cut={true}>
                 {`${RupeeSymbol} ${price ? price.mrp : '--'}`}

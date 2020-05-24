@@ -24,8 +24,8 @@ const AppLayout = () => {
   useEffect(() => {
     (async function () {
       try {
-        let loginS = await AsyncStorage.getItem('LoginStatus');
-        if (typeof loginS === 'string') {
+        let loginS = await AsyncStorage.getItem('@LoginStatus');
+        if (loginS === 'true') {
           console.log('hello');
           setLogin(true);
         } else {
@@ -59,6 +59,7 @@ const AppLayout = () => {
             component={AppContent}
             options={{
               headerShown: true,
+              headerLeft: null,
               headerTitle: () => <AppHeader titleName={'Home'} />,
             }}
           />

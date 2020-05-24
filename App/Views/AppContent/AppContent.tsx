@@ -1,4 +1,5 @@
 import React, {useContext, Suspense, useState, useEffect} from 'react';
+import Geolocation from '@react-native-community/geolocation';
 import Axios from 'axios';
 import {
   Dimensions,
@@ -6,6 +7,7 @@ import {
   BackHandler,
   View,
   FlatList,
+  PermissionsAndroid,
 } from 'react-native';
 import {serverIP} from '../../constant';
 
@@ -69,31 +71,90 @@ const AppContent = ({navigation}) => {
   const [showLoader, setShowLoader] = useState(false);
   const [product, setProduct] = useState([]);
   const getData = useContext(ApplicationContext);
-
+  const [latLong, setlatLong] = useState({} as {lat: string; long: string});
   useEffect(() => {
-    setShowLoader(true);
+    setShowLoader(false);
     (async function () {
       let shopId = await AsyncStorage.getItem('ShopId');
+      let locationPermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      locationPermission === 'granted' &&
+        Geolocation.getCurrentPosition(
+          //Will give you the current location
+          (position) => {
+            console.log('PERMISIION ACCESS');
+            const currentLongitude = JSON.stringify(position.coords.longitude);
+            //getting the Longitude from the location json
+            const currentLatitude = JSON.stringify(position.coords.latitude);
+            //getting the Latitude from the location json
+            setlatLong({
+              lat: parseFloat(currentLatitude),
+              long: parseFloat(currentLongitude),
+            });
+            let lat = parseFloat(currentLatitude);
+            let long = parseFloat(currentLongitude);
+            Axios({
+              method: 'GET',
+              url: `${serverIP}/api/shopkeeper/bygeo?lat=${lat}&long=${long}`,
+            })
+              .then(async (shops: any) => {
+                const shopIds = [];
+                debugger;
+                await shops.data.message.map((shopid: object) => {
+                  console.log(shopid);
+                  shopIds.push(shopid.productListId);
+                });
+                console.log('JOINEDARRY', shopIds.join());
+                Axios({
+                  method: 'GET',
+                  url: `${serverIP}/api/ShopProducts/allProducts?shopIds=${shopIds.join()}`,
+                })
+                  .then((products) => {
+                    setShowLoader(false);
+                    console.log('productsDATA', products.data.products);
+                    setProduct(products.data.products);
+                  })
+                  .catch((error) => {
+                    console.log('PRODUCT_FETCH_ERROR', error);
+                  });
+              })
+              .catch((e: any) => {
+                console.log(e);
+                setShowLoader(false);
+                // navigation.navigate('LocationModal');
+              });
+          },
+          (error) => console.log(error.message),
+          {
+            enableHighAccuracy: true,
+            timeout: 20000,
+            maximumAge: 1000,
+          },
+        );
+
       console.log('getShopName', shopId);
-      await Axios({
-        method: 'GET',
-        url: `${serverIP}/api/ShopProducts/namelist?_id=${shopId}`,
-      })
-        .then((prod: any) => {
-          if (prod.data.products.length === 0) {
-            navigation.navigate('LocationModal');
-          } else {
-            setShowLoader(false);
-            setProduct(prod.data.products);
-          }
-        })
-        .catch((e: any) => {
-          console.log(e);
-          setShowLoader(false);
-          navigation.navigate('LocationModal');
-        });
+      // if (product.length === 0) {
+      //   await Axios({
+      //     method: 'GET',
+      //     url: `${serverIP}/api/ShopProducts/namelist?_id=${shopId}`,
+      //   })
+      //     .then((prod: any) => {
+      //       if (prod.data.products.length === 0) {
+      //         // navigation.navigate('LocationModal');
+      //       } else {
+      //         setShowLoader(false);
+      //         setProduct(prod.data.products);
+      //       }
+      //     })
+      //     .catch((e: any) => {
+      //       console.log(e);
+      //       setShowLoader(false);
+      //       // navigation.navigate('LocationModal');
+      //     });
+      // }
     })();
-  }, [getData.storeId, navigation]);
+  }, [getData.storeId, navigation, product.length]);
 
   BackHandler.addEventListener('hardwareBackPress', () => {
     return true;
@@ -101,6 +162,11 @@ const AppContent = ({navigation}) => {
   const navigate = () => {
     console.log('Cat data', getData.category);
     navigation.navigate('Products', {title: 'Categories'});
+  };
+
+  const productDetails = (details: any) => {
+    console.log('productDetails', details);
+    navigation.navigate('ProductDetail', {title: 'Categories'});
   };
 
   return (
@@ -144,6 +210,7 @@ const AppContent = ({navigation}) => {
                           <SingleProduct
                             elements={item}
                             refresh={() => console.log('hello')}
+                            productDetail={productDetails}
                           />
                         )}
                         keyExtractor={(item) => item._id}
@@ -196,6 +263,7 @@ const AppContent = ({navigation}) => {
                           <SingleProduct
                             elements={item}
                             refresh={() => console.log('hello')}
+                            productDetail={productDetails}
                           />
                         )}
                         keyExtractor={(item) => item._id}
