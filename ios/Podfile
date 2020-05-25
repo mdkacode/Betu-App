@@ -77,7 +77,12 @@ target 'Payal' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
+  pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
+
 
   target 'PayalTests' do
     inherit! :complete

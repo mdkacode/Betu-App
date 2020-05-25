@@ -3,7 +3,9 @@ import {TouchableOpacity, Image, View, AsyncStorage} from 'react-native';
 import {ListItem, Divider} from 'react-native-elements';
 import {RowText, IconImage} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
+import FooterContent from '../FooterContent/FooterContent';
 import ContentLoader, {List} from 'react-content-loader';
+import FastImage from 'react-native-fast-image';
 import utils from '../../utils';
 import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
@@ -80,7 +82,7 @@ const SingleProduct = (props: IremoteProps) => {
       productList.splice(isItemExists, 1, tempVar);
     }
     props.refresh();
-    console.log(productList, 'qwertyu');
+    // console.log(productList, 'qwertyu');
   };
   // Get Active product Object End Here
   return (
@@ -88,6 +90,7 @@ const SingleProduct = (props: IremoteProps) => {
       {() => (
         <Suspense fallback={<CategoryLoader />}>
           <View
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{
               width: 130,
               height: 140,
@@ -101,12 +104,15 @@ const SingleProduct = (props: IremoteProps) => {
             }}>
             <TouchableOpacity
               onPress={() => props.productDetail(props.elements)}>
-              <IconImage
-                width={60}
-                height={60}
-                style={{resizeMode: 'contain'}}
-                margin={4}
+              <FastImage
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  width: 60,
+                  height: 60,
+                  margin: 4,
+                }}
                 source={{uri: imageList[0]}}
+                resizeMode={FastImage.resizeMode.contain}
               />
             </TouchableOpacity>
             <View style={{flexDirection: 'row'}}>

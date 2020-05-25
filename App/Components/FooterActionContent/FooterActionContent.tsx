@@ -1,6 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {RowText, Container} from '../../Modules/GlobalStyles/GlobalStyle';
 import {View, Alert} from 'react-native';
+import _isNil from 'lodash/isNil';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 import RazorpayCheckout from 'react-native-razorpay';
 import {
@@ -33,23 +34,31 @@ var options = {
 
 const FooterActionContent = (props: ActionProps) => {
   let propsData = useContext(ApplicationContext);
+  let sp = 0;
+  let saving = 0;
+  propsData.productList.map((e) => {
+    if (e.price) {
+      sp += e.price.sp;
+      saving += e.price.mrp;
+    }
+  });
   useEffect(() => {
-    console.log(propsData.productList);
+    //console.log(propsData.productList);
   });
   let {navigation, action} = props;
   const orderCheck = () => {
-    console.log(JSON.stringify(navigation), 'GET');
+    //console.log(JSON.stringify(navigation), 'GET');
     RazorpayCheckout.open(options)
       .then((data) => {
         // handle success
-        console.log(`Success: ${data.razorpay_payment_id}`);
+        // console.log(`Success: ${data.razorpay_payment_id}`);
         propsData.paymentStatus = true;
         navigation.navigate('PaymentSuccess');
       })
       .catch((error: any) => {
         // handle failure
         propsData.paymentStatus = false;
-        console.log(`Error: ${error.code} | ${error.description}`);
+        // console.log(`Error: ${error.code} | ${error.description}`);
         navigation.navigate('PaymentSuccess');
       });
   };
@@ -64,10 +73,11 @@ const FooterActionContent = (props: ActionProps) => {
         <View style={{flexDirection: 'column'}}>
           <>
             <RowText fontFormat={'Normal'}>
-              TOTAL: {` ${RupeeSymbol} ${action ? action.totalPrice : 0}`}
+              TOTAL: {` ${RupeeSymbol} ${action ? action.totalPrice : sp}`}
             </RowText>
             <RowText fontFormat={'Italic'} fontize={15} fontColor={ThemeYellow}>
-              Saving: {` ${RupeeSymbol} ${action ? action.discount : 0}`}
+              Saving:{' '}
+              {` ${RupeeSymbol} ${action ? action.discount : saving - sp}`}
             </RowText>
           </>
         </View>

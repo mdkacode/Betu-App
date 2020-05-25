@@ -32,7 +32,7 @@ const ListProduct = (props: IremoteProps) => {
   const getData = useContext(ApplicationContext);
   useEffect(() => {
     return () => {
-      console.log('ISLEAVING', getData.productList);
+      //   console.log('ISLEAVING', getData.productList);
     };
   }, [getData.productList]);
   let {productList} = getData; // getting data from the store
@@ -73,12 +73,12 @@ const ListProduct = (props: IremoteProps) => {
       orderCount = iniValue - 1;
       iniValue > 0 && setIniValue(iniValue - 1);
     }
-    console.log('propduct count is ', orderCount);
+    //console.log('propduct count is ', orderCount);
     let tempVar = props.elements;
     tempVar.quantity = orderCount;
     tempVar.storeId = getData.shopId.shopId;
     tempVar.userId = getData.userid;
-    console.log(tempVar);
+    //console.log(tempVar);
     let isItemExists = productList.findIndex((e) => e._id == tempVar._id);
     if (orderCount === 0) {
       productList.splice(isItemExists, 1);
@@ -93,10 +93,10 @@ const ListProduct = (props: IremoteProps) => {
     try {
       props.refresh();
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
 
-    console.log(productList, 'qwertyu');
+    // console.log(productList, 'qwertyu');
   };
   // Get Active product Object End Here
   return (

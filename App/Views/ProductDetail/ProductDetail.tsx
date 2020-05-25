@@ -1,9 +1,10 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View} from 'react-native';
 import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {Divider} from 'react-native-elements';
 import MyCarousel from '../../Components/Corusal/corusoal';
 import AppButton from '../../Components/Button/Button';
+
 import {
   ThemeYellow,
   Darkest,
@@ -12,75 +13,32 @@ import {
 } from '../../Modules/GlobalStyles/GlobalColors';
 import {DeviceWidth} from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import DescriptionList from '../../Components/DescriptionList/DescriptionList';
-import {ScrollView} from 'react-native-gesture-handler';
+// import {ScrollView} from 'react-native-gesture-handler';
 import SingleProduct from '../../Components/SingleProduct/SingleProduct';
 import {ApplicationContext} from '../../Modules/context';
 
-const product = [
-  {
-    name: 'Lays Chips',
-    image:
-      'https://www.lays.ca/sites/lays.ca/files/30015469_Lay%27s_Roast%20Chicken_235g.png',
-    price: '20',
-    sellPrice: '10',
-  },
-  {
-    name: 'Amala Juice',
-    image:
-      'https://www.patanjaliayurved.net/assets/product_images/400x500/amlajuice500ml400500.png',
-    price: '40',
-    sellPrice: '30',
-  },
-  {
-    name: 'Potato',
-    image:
-      'https://www.ilpomodoropetti.com/wp-content/uploads/2017/01/pomo_petti_100_3.png',
-    price: '120',
-    sellPrice: '110',
-  },
-  {
-    name: 'Potato',
-    image:
-      'https://3.imimg.com/data3/HF/NT/MY-11459200/chilled-potatoes-500x500.png',
-    price: '80',
-    sellPrice: '55',
-  },
-  {
-    name: '5 Start',
-    image: 'https://choosefresh.in/image/cache/data/chocolates/3-500x500.png',
-    price: '70',
-    sellPrice: '60',
-  },
-];
-
-const productDescription = [
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://i.pinimg.com/474x/75/16/9e/75169e9215deed99697e134a34fd153f.jpg',
-  },
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://i.dlpng.com/static/png/1685393-pepsi-cola-12-oz-aluminum-canpng-pepsi-png-522_800_preview.png',
-  },
-];
 const ProductDetail = () => {
   const getData = useContext(ApplicationContext);
-  console.log(getData, 'Context Data Product');
+
+  //  "isAvailable": true, "maxOrderCount": 5, "minOrderCount": 1, "name": "Anrag", "pId": "5ecb60d05a03da52950ecb37", "price": {"mrp": 12, "sp": 10}, "priceList": {"mrp": 12, "sp": 10}, "shopId": "5eca1d2e802701c26e84ecec", "shop_id": "5eca1d2e802701c26e84ecec", "sku": 100,
+  // "slug": "Anrag", "units": "kilo", "updatedAt": "2020-05-25T06:08:17.387Z", "updatedBy": "Samosa singh"}
+  let {
+    imageList,
+    isAvailable,
+    maxOrderCount,
+    minOrderCount,
+    name,
+    pId,
+    price,
+    shopId,
+    units,
+  } = getData.productDescInfo;
   return (
     <LayoutContainer
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       marginTop={1}>
-      <MyCarousel
-        text={false}
-        width={1}
-        height={1.7}
-        content={productDescription}
-      />
+      <MyCarousel text={false} width={1} height={1.7} content={imageList} />
       <View
         style={{
           flex: 1,
@@ -98,12 +56,12 @@ const ProductDetail = () => {
             left: 0,
           }}>
           <RowText fontColor={'black'} fontize={22} style={{marginRight: 20}}>
-            Pepsi (330 ml)
+            {`${name} / ${units}`}
           </RowText>
           <AppButton
             key="cartButton"
             borderd={true}
-            content={`Add @ ${RupeeSymbol} 90`}
+            content={`Add @ ${RupeeSymbol} ${price.sp}`}
             btnWidth={100}
             action={() => console.log('rest')}
           />
@@ -111,25 +69,25 @@ const ProductDetail = () => {
 
         <DescriptionList
           Name={'Name'}
-          Description={`Pepsi 330ML @ ${RupeeSymbol} 70`}
+          Description={`${name}/${units} @ ${RupeeSymbol} ${price.sp}`}
         />
-        <DescriptionList Name={'Status'} Description={'Bottle serving Cold'} />
+        {/* <DescriptionList Name={'Status'} Description={'Bottle serving Cold'} /> */}
         <DescriptionList
           Name={'Max Quantity'}
-          Description={'5 Bottles / Person'}
+          Description={`${maxOrderCount} Units / Person`}
         />
         <DescriptionList
           Name={'Max Retail Price'}
-          Description={`${RupeeSymbol} 90`}
+          Description={`${RupeeSymbol} ${price.mrp}`}
         />
 
         <DescriptionList
           Name={'Selling Price'}
-          Description={`${RupeeSymbol} 90`}
+          Description={`${RupeeSymbol} ${price.sp}`}
         />
         <DescriptionList
           Name={'Discount'}
-          Description={`You are Saving ${RupeeSymbol} 20`}
+          Description={`You are Saving ${RupeeSymbol} ${price.mrp - price.sp}`}
         />
       </View>
 

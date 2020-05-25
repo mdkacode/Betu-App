@@ -28,19 +28,19 @@ const Products = ({navigation}) => {
     (async function () {
       let storeId = await AsyncStorage.getItem('ShopId');
       productList.length === 0 && Loader(true);
-      console.log('fsf', getData.shopId);
+      // console.log('fsf', getData.shopId);
       Axios({
         method: 'GET',
         url: `${serverIP}/api/ShopProducts/namelist?_id=${storeId}&products.cIds=${getData.category._id}`,
       })
         .then((prod: any) => {
-          console.log('GET STORE DATA HERE !!', getData.productList);
-          console.log('GET FORIEGN VALUE !!', prod.data.products);
+          // console.log('GET STORE DATA HERE !!', getData.productList);
+          // console.log('GET FORIEGN VALUE !!', prod.data.products);
           setProductList(prod.data.products);
           Loader(false);
         })
         .catch((e: any) => {
-          console.log(e);
+          // console.log(e);
           Loader(false);
         });
     })();
@@ -53,7 +53,7 @@ const Products = ({navigation}) => {
   ]);
   useEffect(() => {
     if (refresh) {
-      console.log(getData.productList);
+      // console.log(getData.productList);
     }
   });
   const getValueHere = () => {

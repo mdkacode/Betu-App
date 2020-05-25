@@ -7,8 +7,11 @@ import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 
 const AppCart = ({navigation}) => {
   let storeData = useContext(ApplicationContext);
-  storeData.productList.shift();
-  console.log(storeData);
+  // storeData.productList.shift();
+  var cartProducts = storeData.productList.filter(
+    (value) => JSON.stringify(value) !== '{}',
+  );
+  //console.log(storeData);
   return (
     <React.Fragment>
       <LayoutContainer
@@ -17,8 +20,8 @@ const AppCart = ({navigation}) => {
         marginTop={1}
         style={{paddingBottom: 100}}>
         <View style={{flexDirection: 'column', paddingBottom: 50}}>
-          {storeData.productList.length > 0 &&
-            storeData.productList.map((e) => <ListProduct elements={e} />)}
+          {cartProducts.length > 0 &&
+            cartProducts.map((e) => <ListProduct elements={e} />)}
         </View>
       </LayoutContainer>
       <MainAppFooter isMain={{isMain: false, navigation: navigation}} />

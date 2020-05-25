@@ -1,39 +1,28 @@
-import React, {useRef, useEffect, useState} from 'react';
-import {PermissionsAndroid, Alert} from 'react-native';
-import {getPhoneNumber, getUniqueId} from 'react-native-device-info';
-import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
-import {View, Animated, Keyboard} from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { PermissionsAndroid, Alert } from 'react-native';
+import { getPhoneNumber, getUniqueId } from 'react-native-device-info';
+import { LayoutContainer, RowText } from '../../Modules/GlobalStyles/GlobalStyle';
+import { View, Animated, Keyboard } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import AnimationComponent from '../../Modules/AnimationComponent';
-import {ToastAndroid} from 'react-native';
-import {DeviceWidth} from '../../Components/DeviceDeminsions/DeviceDeminsions';
+import { ToastAndroid } from 'react-native';
+import { DeviceWidth } from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import AppButton from '../../Components/Button/Button';
-import {ThemeYellow, Darkest} from '../../Modules/GlobalStyles/GlobalColors';
-import {Textinput} from './Gatekeeper.style';
+import { ThemeYellow, Darkest } from '../../Modules/GlobalStyles/GlobalColors';
+import { Textinput } from './Gatekeeper.style';
 import AsyncStorage from '@react-native-community/async-storage';
 import Axios from 'axios';
-import {serverIP} from '../../constant';
+import { serverIP } from '../../constant';
 
-const GateKeeper = ({navigation}) => {
+const GateKeeper = ({ navigation }) => {
   let [userPhone, setuserPhone] = useState('');
   let [localOtp, setlocalOtp] = useState('');
   let [verifyData, setVerifyData] = useState('');
-  let [latLong, setlatLong] = useState({} as {lat: string; long: string});
+  let [latLong, setlatLong] = useState({} as { lat: string; long: string });
 
   useEffect(() => {
     userPhone === '' &&
       (async function () {
-        try {
-          let loginStatus = await AsyncStorage.getItem('@LoginStatus');
-          if (loginStatus == 'true') {
-            debugger;
-            navigation.navigate('Home');
-            return;
-          }
-        } catch (e) {
-          console.log(e);
-        }
-
         let locationPermission = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
@@ -51,7 +40,7 @@ const GateKeeper = ({navigation}) => {
               //getting the Longitude from the location json
               const currentLatitude = JSON.stringify(position.coords.latitude);
               //getting the Latitude from the location json
-              setlatLong({lat: currentLatitude, long: currentLongitude});
+              setlatLong({ lat: currentLatitude, long: currentLongitude });
             },
             (error) => console.log(error.message),
             {
@@ -70,13 +59,11 @@ const GateKeeper = ({navigation}) => {
 
   const SubmitOTP = async (text: string) => {
     setlocalOtp(text);
-    console.log(text, verifyData, 'asdfghgasdfg');
+    // console.log(text, verifyData, 'asdfghgasdfg');
     if (text.length === 4) {
       if (text === verifyData) {
         await AsyncStorage.setItem('@LoginStatus', 'true');
-        navigation.navigate('Home', {
-          name: `Welcome Mayank`,
-        });
+        navigation.navigate('Home');
       }
     }
   };
@@ -89,18 +76,22 @@ const GateKeeper = ({navigation}) => {
         url: `${serverIP}/api/user/add`,
         data: {
           phone: text,
-          uuid: getUniqueId(),
+          uuid: text,
           loc: {
             type: 'Point',
             coordinates: [parseFloat(latLong.long), parseFloat(latLong.lat)],
           },
         },
-      }).then((response: any) => {
-        console.log('GETDATAA', response.data);
-        setVerifyData(response.data.User[0].otp);
-        Alert.alert(response.data.User[0].otp);
-        console.log(verifyData, 'REMOTEOTP');
-      });
+      })
+        .then((response: any) => {
+          // console.log('GETDATAA', response.data);
+          setVerifyData(response.data.User[0].otp);
+          Alert.alert(response.data.User[0].otp);
+          // console.log(verifyData, 'REMOTEOTP');
+        })
+        .catch((e) => {
+          console.log('ERTRERERR', e);
+        });
       Keyboard.dismiss();
       ToastAndroid.showWithGravity(
         'OTP Sent.',
@@ -116,8 +107,8 @@ const GateKeeper = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         marginTop={1}
-        style={{backgroundColor: '#eeeee'}}>
-        <View style={{alignItems: 'center'}}>
+        style={{ backgroundColor: '#eeeee' }}>
+        <View style={{ alignItems: 'center' }}>
           <AnimationComponent
             height={170}
             isLoop={false}
@@ -128,7 +119,7 @@ const GateKeeper = ({navigation}) => {
             fontColor="black"
             fontize={23}
             fontFormat="bold"
-            style={{marginBottom: 10}}>
+            style={{ marginBottom: 10 }}>
             FIRZI
           </RowText>
           <Textinput

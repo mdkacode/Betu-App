@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
@@ -20,22 +20,21 @@ const ProductDetails = React.lazy(() =>
 const Stack = createStackNavigator();
 
 const AppLayout = () => {
-  const [isLogin, setLogin] = useState(false);
+  let userToken = useRef('false');
+  const [isLogin, setLogin] = useState('false');
   useEffect(() => {
-    (async function () {
+    const bootstrapAsync = async () => {
       try {
-        let loginS = await AsyncStorage.getItem('@LoginStatus');
-        if (loginS === 'true') {
-          console.log('hello');
-          setLogin(true);
-        } else {
-          setLogin(false);
-        }
+        userToken.current = await AsyncStorage.getItem('@LoginStatus');
+        setLogin(userToken);
+        console.log('GETUSER', userToken);
       } catch (e) {
-        setLogin(false);
+        // Restoring token failed
       }
-    });
+    };
+    bootstrapAsync();
   }, []);
+  console.log('FUN', userToken.current);
   return (
     <Suspense fallback={<SearchStoreLoader />}>
       <NavigationContainer>
@@ -45,24 +44,26 @@ const AppLayout = () => {
               backgroundColor: '#eeeeee',
             },
           }}>
-          <Stack.Screen
-            name={isLogin ? 'Home' : 'Login'}
-            component={isLogin ? AppContent : GateKeeper}
-            // component={Products}
-            options={{
-              headerShown: isLogin ? true : false,
-              headerTitle: () => <AppHeader titleName={'Home'} />,
-            }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={AppContent}
-            options={{
-              headerShown: true,
-              headerLeft: null,
-              headerTitle: () => <AppHeader titleName={'Home'} />,
-            }}
-          />
+          {userToken.current == ('true' || true) ? (
+            <Stack.Screen
+              name="Home"
+              component={AppContent}
+              options={{
+                headerShown: true,
+                // headerLeft: null,
+                headerTitle: () => <AppHeader titleName={'Home'} />,
+              }}
+            />
+          ) : (
+            <Stack.Screen
+              name={'Login'}
+              component={GateKeeper}
+              // component={Products}
+              options={{
+                headerShown: false,
+              }}
+            />
+          )}
           <Stack.Screen
             name="LocationModal"
             component={LocationModal}

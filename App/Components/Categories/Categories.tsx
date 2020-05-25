@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext, Suspense} from 'react';
 import {ScrollView, View, Dimensions, TouchableOpacity} from 'react-native';
 import {ApplicationContext} from '../../Modules/context';
+import FastImage from 'react-native-fast-image';
 import {
   IconImage,
   RowText,
@@ -27,13 +28,12 @@ const Categories = (props: catProps) => {
       method: 'GET',
       url: `${serverIP}/api/category`,
     }).then((e) => {
-      console.log(e, 'datassss');
       setCategories(e.data.message);
       Loader(false);
     });
   }, []);
   const selectCategory = (data: any) => {
-    console.log(data);
+    // console.log(data);
     storeData.category = {
       _id: data._id,
       name: data.name,
@@ -56,11 +56,14 @@ const Categories = (props: catProps) => {
             <TouchableOpacity onPress={() => selectCategory(element)}>
               <CircleArea height={500} width={windowWidth / 6}>
                 <View style={{flex: 1, flexDirection: 'column'}}>
-                  <IconImage
+                  <FastImage
                     source={{uri: element.imageList[0]}}
-                    width={30}
-                    height={30}
-                    margin={12}
+                    style={{
+                      width: 20,
+                      height: 30,
+                      margin: 12,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
 
                   <RowText paddingLeft={5} fontize={12} fontColor="black">

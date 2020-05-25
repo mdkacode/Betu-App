@@ -1,6 +1,10 @@
 import Actions from './action';
 import React from 'react';
 
+interface Iprice {
+  mrp: string;
+  sp: string;
+}
 interface productDetailsProps {
   name: string;
   _id: string;
@@ -8,10 +12,10 @@ interface productDetailsProps {
   price: Iprice;
   quantity: number;
   storeId: string;
+  imageList?: string[];
   userId: string;
   maxOrderCount: number;
   minOrderCount: number;
-  imageList: string[];
   isAvailable: boolean;
 }
 interface Icategory {
@@ -24,6 +28,7 @@ const initialState = {
   userid: '9936142128',
   productList: [{} as productDetailsProps],
   shopId: {},
+  productDescInfo: {} as productDetailsProps,
   storeId: '' as string,
   category: {} as Icategory,
   showLocatios: false as boolean,

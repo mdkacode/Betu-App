@@ -51,7 +51,7 @@ const LocationModal = ({navigation}) => {
         getAddress.includes(text.toLocaleLowerCase())
       );
     });
-    console.log(perSistData);
+    // console.log(perSistData);
     setShops(text.length === 0 ? perSistData : searchedShops);
   };
 
@@ -59,7 +59,7 @@ const LocationModal = ({navigation}) => {
     store.showLocatios = false;
     store.storeId = e.shopId;
     await AsyncStorage.setItem('ShopId', e.shopId);
-    console.log('anragbetu', e);
+    //console.log('anragbetu', e);
     isView(false);
     setLocPopUp(false);
     setShowLoader(false);
