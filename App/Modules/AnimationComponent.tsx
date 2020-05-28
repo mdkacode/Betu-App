@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Animated, Easing} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Animated, Easing } from 'react-native';
 import LottieView from 'lottie-react-native';
 import {
   DeviceHeight,
@@ -7,7 +7,7 @@ import {
 } from '../Components/DeviceDeminsions/DeviceDeminsions';
 
 const AnimationComponent = (props: AnimationProps) => {
-  let {animationPath, height, isAutoPlay, isLoop} = props;
+  let { animationPath, height, isAutoPlay, isLoop } = props;
 
   let selectedFile;
   switch (animationPath) {
@@ -21,6 +21,9 @@ const AnimationComponent = (props: AnimationProps) => {
     case 'login':
       selectedFile = require('../assets/Actions/Payments/Login.json');
       break;
+    case 'location':
+      selectedFile = require('../assets/Actions/Location/location.json');
+      break;
     default:
       require('../assets/images/loader/list-loader.json');
       break;
@@ -29,7 +32,7 @@ const AnimationComponent = (props: AnimationProps) => {
   return (
     <LottieView
       source={selectedFile}
-      style={{width: DeviceWidth, height: height || 'auto'}}
+      style={{ width: DeviceWidth, height: height || 'auto' }}
       autoPlay={isAutoPlay}
       loop={isLoop}
     />

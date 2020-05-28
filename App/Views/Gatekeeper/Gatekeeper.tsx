@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import { PermissionsAndroid, Alert } from 'react-native';
 import { getPhoneNumber, getUniqueId } from 'react-native-device-info';
 import { LayoutContainer, RowText } from '../../Modules/GlobalStyles/GlobalStyle';
@@ -11,10 +11,12 @@ import AppButton from '../../Components/Button/Button';
 import { ThemeYellow, Darkest } from '../../Modules/GlobalStyles/GlobalColors';
 import { Textinput } from './Gatekeeper.style';
 import AsyncStorage from '@react-native-community/async-storage';
+import { ApplicationContext } from '../../Modules/context';
 import Axios from 'axios';
 import { serverIP } from '../../constant';
 
 const GateKeeper = ({ navigation }) => {
+  let dataStore = useContext(ApplicationContext);
   let [userPhone, setuserPhone] = useState('');
   let [localOtp, setlocalOtp] = useState('');
   let [verifyData, setVerifyData] = useState('');
@@ -40,6 +42,8 @@ const GateKeeper = ({ navigation }) => {
               //getting the Longitude from the location json
               const currentLatitude = JSON.stringify(position.coords.latitude);
               //getting the Latitude from the location json
+              AsyncStorage.setItem("@lat", currentLatitude.toString());
+              AsyncStorage.setItem("@long", currentLongitude.toString());
               setlatLong({ lat: currentLatitude, long: currentLongitude });
             },
             (error) => console.log(error.message),
@@ -59,11 +63,11 @@ const GateKeeper = ({ navigation }) => {
 
   const SubmitOTP = async (text: string) => {
     setlocalOtp(text);
-    // console.log(text, verifyData, 'asdfghgasdfg');
+    console.log(text, verifyData, 'asdfghgasdfg');
     if (text.length === 4) {
       if (text === verifyData) {
         await AsyncStorage.setItem('@LoginStatus', 'true');
-        navigation.navigate('Home');
+        navigation.navigate('MainHome');
       }
     }
   };
@@ -83,8 +87,10 @@ const GateKeeper = ({ navigation }) => {
           },
         },
       })
-        .then((response: any) => {
-          // console.log('GETDATAA', response.data);
+        .then(async (response: any) => {
+          console.log('GETDATAA', response.data.User[0]);
+          await AsyncStorage.setItem('@userPhone', response.data.User[0].phone);
+          dataStore.userInfo = response.data.User[0];
           setVerifyData(response.data.User[0].otp);
           Alert.alert(response.data.User[0].otp);
           // console.log(verifyData, 'REMOTEOTP');

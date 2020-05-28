@@ -1,14 +1,14 @@
-import React, {Suspense, useState, useContext} from 'react';
-import {TouchableOpacity, Image, View, AsyncStorage} from 'react-native';
-import {ListItem, Divider} from 'react-native-elements';
-import {RowText, IconImage} from '../../Modules/GlobalStyles/GlobalStyle';
+import React, { Suspense, useState, useContext } from 'react';
+import { TouchableOpacity, Image, View, AsyncStorage } from 'react-native';
+import { ListItem, Divider } from 'react-native-elements';
+import { RowText, IconImage } from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
 import FooterContent from '../FooterContent/FooterContent';
-import ContentLoader, {List} from 'react-content-loader';
+import ContentLoader, { List } from 'react-content-loader';
 import FastImage from 'react-native-fast-image';
 import utils from '../../utils';
-import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
-import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
+import { Darkest, RupeeSymbol } from '../../Modules/GlobalStyles/GlobalColors';
+import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
 
 interface Iprice {
@@ -29,13 +29,13 @@ interface productDetailsProps {
 interface IremoteProps {
   elements?: productDetailsProps;
   refresh?: any;
-  productDetail?: ({}) => void;
+  productDetail?: ({ }) => void;
 }
 
 const SingleProduct = (props: IremoteProps) => {
   const getData = useContext(ApplicationContext);
 
-  let {productList} = getData;
+  let { productList } = getData;
   let {
     name,
     price,
@@ -82,6 +82,14 @@ const SingleProduct = (props: IremoteProps) => {
       productList.splice(isItemExists, 1, tempVar);
     }
     props.refresh();
+    try {
+      await AsyncStorage.removeItem('@localCartItem');
+      await AsyncStorage.setItem('@localCartItem', JSON.stringify(productList));
+
+    } catch (error) {
+
+    }
+
     // console.log(productList, 'qwertyu');
   };
   // Get Active product Object End Here
@@ -93,7 +101,8 @@ const SingleProduct = (props: IremoteProps) => {
             // eslint-disable-next-line react-native/no-inline-styles
             style={{
               width: 130,
-              height: 140,
+              elevation: 5,
+              height: 150,
               borderWidth: 0,
               alignItems: 'center',
               justifyContent: 'center',
@@ -107,15 +116,15 @@ const SingleProduct = (props: IremoteProps) => {
               <FastImage
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
-                  width: 60,
-                  height: 60,
+                  width: 70,
+                  height: 70,
                   margin: 4,
                 }}
-                source={{uri: imageList[0]}}
+                source={{ uri: imageList[0] }}
                 resizeMode={FastImage.resizeMode.contain}
               />
             </TouchableOpacity>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <RowText fontColor="red" fontize={12} cut={true}>
                 {`${RupeeSymbol} ${price ? price.mrp : '--'}`}
               </RowText>
@@ -126,7 +135,7 @@ const SingleProduct = (props: IremoteProps) => {
             <RowText fontColor="black" fontize={12}>
               {utils.trimText(name)}
             </RowText>
-            <View style={{flexDirection: 'row', paddingBottom: 10}}>
+            <View style={{ flexDirection: 'row', elevation: 5, paddingBottom: 10 }}>
               <AddRemoveBtn
                 remoteValues={actionObject}
                 defaultValue={iniValue}
@@ -135,7 +144,7 @@ const SingleProduct = (props: IremoteProps) => {
             </View>
           </View>
 
-          <Divider style={{backgroundColor: Darkest}} />
+          <Divider style={{ backgroundColor: Darkest, marginBottom: 10 }} />
         </Suspense>
       )}
     </ApplicationConumer>

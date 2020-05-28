@@ -1,14 +1,14 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import _Debounce from 'lodash/debounce';
 import AsyncStorage from '@react-native-community/async-storage';
-import {LayoutContainer} from '../Modules/GlobalStyles/GlobalStyle';
-import {Modal, Alert, Dimensions} from 'react-native';
-import {Textinput} from '../Views/Gatekeeper/Gatekeeper.style';
+import { LayoutContainer } from '../Modules/GlobalStyles/GlobalStyle';
+import { Modal, Alert, Dimensions, BackHandler } from 'react-native';
+import { Textinput } from '../Views/Gatekeeper/Gatekeeper.style';
 import SearchStoreLoader from './SearchStoreLoader';
 import CommanList from '../Components/ListProduct/CommanList';
 import Axios from 'axios';
-import {serverIP} from '../constant';
-import {ApplicationContext} from '../Modules/context';
+import { serverIP } from '../constant';
+import { ApplicationContext } from '../Modules/context';
 
 interface ILocationMoal {
   // locPopUp: boolean;
@@ -17,15 +17,16 @@ interface ILocationMoal {
   // productSearch: any;
   selectedShop: any;
 }
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const LocationModal = ({navigation}) => {
+const LocationModal = ({ navigation }) => {
   const store = useContext(ApplicationContext);
   const [showLoader, setShowLoader] = useState(false);
   const [shops, setShops] = useState([]);
   const [perSistData, setperSistData] = useState([]); // for storing copy of the store
   const [locPopUp, setLocPopUp] = useState(false);
   const [view, isView] = useState(false);
+
 
   useEffect(() => {
     setShowLoader(true);
@@ -41,7 +42,7 @@ const LocationModal = ({navigation}) => {
     setLocPopUp(true);
   }, []);
 
-  const productSearch = (text: text) => {
+  const productSearch = (text: string) => {
     let searchedShops = shops.filter(function (hero: any) {
       let getName = hero.businessName.toLocaleLowerCase();
       let getAddress = hero.address.areaName.toLocaleLowerCase();
@@ -72,13 +73,14 @@ const LocationModal = ({navigation}) => {
       showsVerticalScrollIndicator={true}
       showsHorizontalScrollIndicator={true}
       marginTop={1}
-      style={{paddingBottom: 10}}>
+      style={{ paddingBottom: 10 }}>
       <Modal
         animationType="slide"
         transparent={true}
         visible={locPopUp}
         onRequestClose={() => {
           setLocPopUp(false);
+          navigation.navigate('Home');
         }}>
         <Textinput
           itemHeight={50}
@@ -86,7 +88,7 @@ const LocationModal = ({navigation}) => {
           onChangeText={_Debounce((text: string) => productSearch(text), 500)}
           placeholder="Search Store ..."
         />
-        <LayoutContainer style={{flexDirection: 'column', paddingBottom: 50}}>
+        <LayoutContainer style={{ flexDirection: 'column', paddingBottom: 50 }}>
           {showLoader && <SearchStoreLoader />}
           {shops.map((e: any) => (
             <CommanList

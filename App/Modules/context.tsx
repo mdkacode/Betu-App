@@ -5,6 +5,25 @@ interface Iprice {
   mrp: string;
   sp: string;
 }
+
+interface Iuser {
+  cId: string; // cart id => unique id
+  emailId: string;
+  uuid: string;
+  name: string;
+  isExisting: boolean;
+  phone: number;
+  otp: number;
+  defaultAddress: object[]; // array of Objects
+  loc: {
+    type: string;
+    coordinates: [number];
+  };
+  addresses: string;
+  imageLocation: string;
+  isBlackListed: string;
+}
+
 interface productDetailsProps {
   name: string;
   _id: string;
@@ -25,7 +44,7 @@ interface Icategory {
 
 const initialState = {
   rating: 1,
-  userid: '9936142128',
+  userInfo: {} as Iuser,
   productList: [{} as productDetailsProps],
   shopId: {},
   productDescInfo: {} as productDetailsProps,
@@ -38,13 +57,13 @@ const initialState = {
 const reducer = (state: any, action: any) => {
   switch (action.Type) {
     case Actions.RATING:
-      return {...state, rating: action.value};
+      return { ...state, rating: action.value };
     case Actions.RESET:
-      return {...state, rating: action.value};
+      return { ...state, rating: action.value };
     case Actions.PRODUCT_LIST:
-      return {...state, productList: action.value};
+      return { ...state, productList: action.value };
     default:
-      return {...state, ...initialState};
+      return { ...state, ...initialState };
   }
 };
 
@@ -57,8 +76,8 @@ const Provider = (children: any) => {
   const value = {
     rating: state.rating,
     item: state.item,
-    productList: () => dispatch({type: Actions.PRODUCT_LIST}),
-    reset: () => dispatch({type: Actions.RESET}),
+    productList: () => dispatch({ type: Actions.PRODUCT_LIST }),
+    reset: () => dispatch({ type: Actions.RESET }),
   };
 
   return (

@@ -1,7 +1,7 @@
-import React, {useState, Suspense} from 'react';
-import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
-import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
+import React, { useState, Suspense } from 'react';
+import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { TextInput, TouchableHighlight } from 'react-native-gesture-handler';
+import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
 
 interface Iprice {
   mrp: number;
@@ -21,7 +21,7 @@ interface AddRemoveBtnProps {
 }
 
 const AddRemoveBtn = (props: AddRemoveBtnProps) => {
-  const {defaultValue, remoteValues, toggleAction} = props;
+  const { defaultValue, remoteValues, toggleAction } = props;
 
   const addBtn = () => {
     return (
@@ -71,7 +71,7 @@ const AddRemoveBtn = (props: AddRemoveBtnProps) => {
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
-    <View style={{flexDirection: 'row'}}>
+    <View style={{ flexDirection: 'row' }}>
       {defaultValue === 0 ? addBtn() : sizeBtn()}
     </View>
   );
@@ -84,7 +84,7 @@ const style = StyleSheet.create({
     height: 35,
     color: 'black',
     borderColor: '#eeee',
-    borderWidth: 1,
+    borderWidth: 0,
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -93,6 +93,7 @@ const style = StyleSheet.create({
     padding: 4,
     borderRadius: 5,
     marginBottom: 5,
+    elevation: 15,
     width: 45,
     alignItems: 'center',
   },

@@ -1,18 +1,21 @@
 import 'react-native-gesture-handler';
-import React, {Suspense, useEffect, useState, useRef} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
+import React, { Suspense, useEffect, useState, useRef } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
 import UserProfile from '../UserProfile/UserProfile';
 import PaymentSuccess from '../Payments/PaymentSuccess';
 import GateKeeper from '../Gatekeeper/Gatekeeper';
 import Products from '../Products/Products';
 import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
 import AsyncStorage from '@react-native-community/async-storage';
+import services from "../../services/products.api";
 const LocationModal = React.lazy(() => import('../../Loaders/LocationModal'));
 const AppHeader = React.lazy(() => import('../AppHeader/AppHeader'));
 const AppContent = React.lazy(() => import('../AppContent/AppContent'));
 const AppCart = React.lazy(() => import('../AppCart/AppCart'));
+const PaymentLayout = React.lazy(() => import('../PaymentLayout/PaymentLayout'));
+
 const ProductDetails = React.lazy(() =>
   import('../ProductDetail/ProductDetail'),
 );
@@ -25,16 +28,15 @@ const AppLayout = () => {
   useEffect(() => {
     const bootstrapAsync = async () => {
       try {
+        services.backgroundMagic();
         userToken.current = await AsyncStorage.getItem('@LoginStatus');
         setLogin(userToken);
-        console.log('GETUSER', userToken);
       } catch (e) {
         // Restoring token failed
       }
     };
     bootstrapAsync();
   }, []);
-  console.log('FUN', userToken.current);
   return (
     <Suspense fallback={<SearchStoreLoader />}>
       <NavigationContainer>
@@ -50,20 +52,20 @@ const AppLayout = () => {
               component={AppContent}
               options={{
                 headerShown: true,
-                // headerLeft: null,
+                headerLeft: null,
                 headerTitle: () => <AppHeader titleName={'Home'} />,
               }}
             />
           ) : (
-            <Stack.Screen
-              name={'Login'}
-              component={GateKeeper}
-              // component={Products}
-              options={{
-                headerShown: false,
-              }}
-            />
-          )}
+              <Stack.Screen
+                name={'Login'}
+                component={GateKeeper}
+                // component={Products}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            )}
           <Stack.Screen
             name="LocationModal"
             component={LocationModal}
@@ -74,11 +76,28 @@ const AppLayout = () => {
           />
 
           <Stack.Screen
+            name="MainHome"
+            component={AppContent}
+            options={{
+              headerShown: true,
+              headerLeft: null,
+              headerTitle: () => <AppHeader titleName={'Home'} />,
+            }}
+          />
+          <Stack.Screen
             name="GateKeeper"
             component={GateKeeper}
             options={{
               headerShown: false,
               headerTitle: () => <AppHeader titleName={'Get In'} />,
+            }}
+          />
+          <Stack.Screen
+            name="PaymentLayout"
+            component={PaymentLayout}
+            options={{
+              headerShown: true,
+              headerTitle: () => <AppHeader titleName={'Payment'} />,
             }}
           />
           <Stack.Screen

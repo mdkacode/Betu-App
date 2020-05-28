@@ -1,11 +1,11 @@
-import React, {Suspense, useState, useEffect, useContext} from 'react';
-import {Image, View} from 'react-native';
-import {ListItem, Divider} from 'react-native-elements';
-import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
+import React, { Suspense, useState, useEffect, useContext } from 'react';
+import { Image, View } from 'react-native';
+import { ListItem, Divider } from 'react-native-elements';
+import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
-import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
-import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
-
+import { Darkest, RupeeSymbol } from '../../Modules/GlobalStyles/GlobalColors';
+import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
+import FastImage from 'react-native-fast-image';
 interface Iprice {
   mrp: number;
   sp: number;
@@ -35,7 +35,7 @@ const ListProduct = (props: IremoteProps) => {
       //   console.log('ISLEAVING', getData.productList);
     };
   }, [getData.productList]);
-  let {productList} = getData; // getting data from the store
+  let { productList } = getData; // getting data from the store
 
   let {
     name,
@@ -104,18 +104,19 @@ const ListProduct = (props: IremoteProps) => {
       {() => (
         <Suspense fallback={<RowText fontize={20}>Loading</RowText>}>
           <ListItem
-            containerStyle={[{backgroundColor: '#eeeeee'}]}
+            containerStyle={[{ backgroundColor: '#eeeeee' }]}
             leftElement={
-              <Image
+              <FastImage
                 source={{
                   uri: imageList[0],
                 }}
-                style={{width: 40, height: 40}}
+                resizeMode={FastImage.resizeMode.contain}
+                style={{ width: 40, height: 40 }}
               />
             }
             key={'product'}
             subtitle={
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <RowText
                   fontColor={'red'}
                   fontize={12}
@@ -124,7 +125,7 @@ const ListProduct = (props: IremoteProps) => {
                   {`${RupeeSymbol} ${price ? price.mrp : 'No Price Found'}`}
                 </RowText>
                 <RowText
-                  style={{paddingLeft: 5}}
+                  style={{ paddingLeft: 5 }}
                   fontColor={'green'}
                   fontize={14}>
                   {`${RupeeSymbol} ${price ? price.sp : 'No Price Found'}`}
@@ -144,7 +145,7 @@ const ListProduct = (props: IremoteProps) => {
               />
             }
           />
-          <Divider style={{backgroundColor: Darkest}} />
+          <Divider style={{ backgroundColor: Darkest }} />
         </Suspense>
       )}
     </ApplicationConumer>

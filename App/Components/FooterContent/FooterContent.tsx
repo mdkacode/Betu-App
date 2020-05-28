@@ -1,12 +1,12 @@
-import React, {useContext, useEffect} from 'react';
-import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
+import React, { useContext, useEffect } from 'react';
+import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
 import {
   Container,
   AppView,
   IconImage,
 } from '../../Modules/GlobalStyles/GlobalStyle';
-import {TouchableOpacity} from 'react-native';
-import {Badge} from 'react-native-elements';
+import { TouchableOpacity } from 'react-native';
+import { Badge } from 'react-native-elements';
 
 interface FooterContent {
   action?: any;
@@ -46,11 +46,11 @@ const FooterContent = (props: FooterContent) => {
             height={30}
           />
 
-          {storeData.productList.length != 0 && (
+          {storeData.productList.length != (0 || 1) && (
             <Badge
               status="error"
-              containerStyle={{position: 'absolute', top: -4, right: -4}}
-              value={storeData.productList.length}
+              containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+              value={storeData.productList.length - 1}
             />
           )}
         </AppView>

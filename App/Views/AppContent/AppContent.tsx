@@ -11,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import { serverIP } from '../../constant';
-import productsList from '../../services/products.api';
+import services from '../../services/products.api';
 // import Geolocation from '@react-native-community/geolocation';
 const Categories = React.lazy(() =>
   import('../../Components/Categories/Categories'),
@@ -119,7 +119,7 @@ const AppContent = ({ navigation }) => {
                 setProduct(products.data.products);
                 setShowLoader(false);
               } catch (e) {
-                products = await productsList(lat, long); // fetching API
+                products = await services.productsList(lat, long); // fetching API
               }
               setProduct(products.data.products);
               setShowLoader(false);
@@ -158,7 +158,7 @@ const AppContent = ({ navigation }) => {
   }, [getData.storeId, navigation, product.length]);
 
   BackHandler.addEventListener('hardwareBackPress', () => {
-    return true;
+    BackHandler.exitApp()
   });
   const navigate = () => {
     console.log('Cat data', getData.category);
@@ -178,10 +178,7 @@ const AppContent = ({ navigation }) => {
         });
       });
     details.imageList = imageFinalArray;
-    console.log('productDetails-------------------', imageFinalArray);
-
     getData.productDescInfo = details; // setting data to store !!
-
     navigation.navigate('ProductDetail', { title: 'Categories' });
   };
 
@@ -207,7 +204,7 @@ const AppContent = ({ navigation }) => {
             <ProductLoader />
           ) : (
               !showLoader &&
-              product.length > 1 && (
+              product.length > 0 && (
                 <LayoutContainer marginTop={0}>
                   <RowText paddingLeft={10} fontize={18} fontColor="black">
                     Popular Products
@@ -219,7 +216,7 @@ const AppContent = ({ navigation }) => {
                     <Suspense fallback={<ProductLoader />}>
                       {product.length > 0 ? (
                         <FlatList
-                          style={{ height: 140 }}
+                          style={{ height: 170 }}
                           data={product}
                           horizontal
                           renderItem={({ item }) => (
@@ -267,12 +264,12 @@ const AppContent = ({ navigation }) => {
                 </RowText>
                   <ScrollView
                     horizontal={true}
-                    style={{ flex: 1, height: 'auto', marginTop: 0 }}
+                    style={{ flex: 1, height: 'auto', marginTop: 0, marginBottom: 15 }}
                     showsHorizontalScrollIndicator={false}>
                     <Suspense fallback={<ProductLoader />}>
                       {product.length > 0 ? (
                         <FlatList
-                          style={{ height: 140 }}
+                          style={{ height: 160 }}
                           data={product}
                           horizontal
                           renderItem={({ item }) => (
