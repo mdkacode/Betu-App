@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: '#eeee',
+    backgroundColor: '#fff',
     borderRadius: 8,
     left: 0,
   },

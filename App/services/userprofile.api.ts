@@ -12,4 +12,20 @@ const userProfile = async (userId: object) => {
     return userProfileData.data;
 }
 
-export default { userLocation, userProfile };
+const updateUserProfile = async (userId: string, body: object) => {
+
+    const userProfileData = await api.post(`user/update?phone=${userId}`, body);
+    return userProfileData.data;
+}
+
+const getUserProfile = async (userId: string) => {
+
+    const userProfileData = await api.get(`user/one?phone=${userId}`);
+    return userProfileData.data;
+}
+
+
+
+
+
+export default { userLocation, userProfile, updateUserProfile, getUserProfile };

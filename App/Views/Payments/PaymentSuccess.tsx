@@ -1,19 +1,19 @@
-import React, {useEffect, useContext} from 'react';
-import {View, StatusBar, Alert} from 'react-native';
+import React, { useEffect, useContext } from 'react';
+import { View, StatusBar, Alert } from 'react-native';
 import {
   DeviceWidth,
   DeviceHeight,
 } from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import AnimationComponent from '../../Modules/AnimationComponent';
-import {Divider} from 'react-native-elements';
-import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
-import {ApplicationContext} from '../../Modules/context';
+import { Divider } from 'react-native-elements';
+import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
+import { ApplicationContext } from '../../Modules/context';
 
-const PaymentSuccess = ({navigation}) => {
+const PaymentSuccess = ({ navigation }) => {
   const getStoreData = useContext(ApplicationContext);
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Home');
+      navigation.navigate('MainHome');
     }, 3000);
   });
   return (
@@ -23,7 +23,7 @@ const PaymentSuccess = ({navigation}) => {
         height: DeviceHeight + 21,
         backgroundColor: `${
           !getStoreData.paymentStatus ? '#EE4B6A' : '#649d66'
-        }`,
+          }`,
       }}>
       <StatusBar
         barStyle="dark-content"
@@ -41,7 +41,7 @@ const PaymentSuccess = ({navigation}) => {
         isAutoPlay={true}
         animationPath={!getStoreData.paymentStatus ? 'fail' : 'success'}
       />
-      <RowText fontColor={'white'} fontize={34} style={{alignSelf: 'center'}}>
+      <RowText fontColor={'white'} fontize={34} style={{ alignSelf: 'center' }}>
         {!getStoreData.paymentStatus
           ? '  Payment Failed !!'
           : 'Payment Success !!'}

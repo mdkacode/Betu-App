@@ -57,7 +57,7 @@ export const IconImage = styled.Image`
 
 export const LayoutContainer = styled.ScrollView`
   flex: 1;
-  background-color: #eeeeee;
+  background-color: #fff;
   flex-direction: column;
   margin-top: ${(p: layoutProps) => p.marginTop || 15}px;
 `;

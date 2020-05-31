@@ -2,9 +2,11 @@ import 'react-native-gesture-handler';
 import React, { Suspense, useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { BackHandler } from "react-native";
 import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
 import UserProfile from '../UserProfile/UserProfile';
 import PaymentSuccess from '../Payments/PaymentSuccess';
+import LocationCheck from "../../misc/locationAccess";
 import GateKeeper from '../Gatekeeper/Gatekeeper';
 import Products from '../Products/Products';
 import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
@@ -14,6 +16,7 @@ const LocationModal = React.lazy(() => import('../../Loaders/LocationModal'));
 const AppHeader = React.lazy(() => import('../AppHeader/AppHeader'));
 const AppContent = React.lazy(() => import('../AppContent/AppContent'));
 const AppCart = React.lazy(() => import('../AppCart/AppCart'));
+const FilterProducts = React.lazy(() => import('../FilterProducts/FilterProducts'));
 const PaymentLayout = React.lazy(() => import('../PaymentLayout/PaymentLayout'));
 
 const ProductDetails = React.lazy(() =>
@@ -22,28 +25,38 @@ const ProductDetails = React.lazy(() =>
 
 const Stack = createStackNavigator();
 
+
 const AppLayout = () => {
+  console.log('HERERHECHECLINFOOT');
   let userToken = useRef('false');
   const [isLogin, setLogin] = useState('false');
   useEffect(() => {
+
+    LocationCheck();
     const bootstrapAsync = async () => {
       try {
         services.backgroundMagic();
         userToken.current = await AsyncStorage.getItem('@LoginStatus');
         setLogin(userToken);
       } catch (e) {
+
         // Restoring token failed
       }
     };
     bootstrapAsync();
   }, []);
+
+  console.log(userToken.current, "qazwxeddrfdewdedscew");
   return (
     <Suspense fallback={<SearchStoreLoader />}>
+
       <NavigationContainer>
+
+
         <Stack.Navigator
           screenOptions={{
             headerStyle: {
-              backgroundColor: '#eeeeee',
+              backgroundColor: '#fff',
             },
           }}>
           {userToken.current == ('true' || true) ? (
@@ -56,6 +69,8 @@ const AppLayout = () => {
                 headerTitle: () => <AppHeader titleName={'Home'} />,
               }}
             />
+
+
           ) : (
               <Stack.Screen
                 name={'Login'}
@@ -66,14 +81,7 @@ const AppLayout = () => {
                 }}
               />
             )}
-          <Stack.Screen
-            name="LocationModal"
-            component={LocationModal}
-            options={{
-              headerShown: true,
-              headerTitle: () => <AppHeader titleName={'Get In'} />,
-            }}
-          />
+
 
           <Stack.Screen
             name="MainHome"
@@ -82,6 +90,14 @@ const AppLayout = () => {
               headerShown: true,
               headerLeft: null,
               headerTitle: () => <AppHeader titleName={'Home'} />,
+            }}
+          />
+          <Stack.Screen
+            name="FilterProducts"
+            component={FilterProducts}
+            options={{
+              headerShown: false,
+              headerTitle: () => <AppHeader titleName={'Products'} />,
             }}
           />
           <Stack.Screen
@@ -100,6 +116,7 @@ const AppLayout = () => {
               headerTitle: () => <AppHeader titleName={'Payment'} />,
             }}
           />
+
           <Stack.Screen
             name="Products"
             component={Products}
@@ -138,6 +155,16 @@ const AppLayout = () => {
               headerTitle: <RowText fontColor={'black'}>Profile</RowText>,
             })}
           />
+
+          <Stack.Screen
+            name="LocationModal"
+            component={LocationModal}
+            options={{
+              headerShown: true,
+              headerTitle: <RowText fontColor={'black'}>Please Press Back Arrow</RowText>,
+            }}
+          />
+
         </Stack.Navigator>
       </NavigationContainer>
     </Suspense>

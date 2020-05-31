@@ -24,6 +24,9 @@ const AnimationComponent = (props: AnimationProps) => {
     case 'location':
       selectedFile = require('../assets/Actions/Location/location.json');
       break;
+    case 'loading':
+      selectedFile = require('../assets/images/loader/loading.json');
+      break;
     default:
       require('../assets/images/loader/list-loader.json');
       break;

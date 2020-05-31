@@ -1,7 +1,7 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {View} from 'react-native';
-import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
-import {Divider} from 'react-native-elements';
+import React, { useState, useContext, useEffect } from 'react';
+import { View } from 'react-native';
+import { LayoutContainer, RowText } from '../../Modules/GlobalStyles/GlobalStyle';
+import { Divider } from 'react-native-elements';
 import MyCarousel from '../../Components/Corusal/corusoal';
 import AppButton from '../../Components/Button/Button';
 
@@ -11,11 +11,11 @@ import {
   LightColor,
   RupeeSymbol,
 } from '../../Modules/GlobalStyles/GlobalColors';
-import {DeviceWidth} from '../../Components/DeviceDeminsions/DeviceDeminsions';
+import { DeviceWidth } from '../../Components/DeviceDeminsions/DeviceDeminsions';
 import DescriptionList from '../../Components/DescriptionList/DescriptionList';
 // import {ScrollView} from 'react-native-gesture-handler';
 import SingleProduct from '../../Components/SingleProduct/SingleProduct';
-import {ApplicationContext} from '../../Modules/context';
+import { ApplicationContext } from '../../Modules/context';
 
 const ProductDetail = () => {
   const getData = useContext(ApplicationContext);
@@ -33,12 +33,14 @@ const ProductDetail = () => {
     shopId,
     units,
   } = getData.productDescInfo;
+
+  console.log(getData.productDescInfo.imageList, "werthjhgfdfsdgfh");
   return (
     <LayoutContainer
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       marginTop={1}>
-      <MyCarousel text={false} width={1} height={1.7} content={imageList} />
+      {<MyCarousel text={false} width={1} height={1.7} content={imageList} />}
       <View
         style={{
           flex: 1,
@@ -46,16 +48,16 @@ const ProductDetail = () => {
           marginLeft: 10,
           marginRight: 15,
           paddingTop: 10,
-          backgroundColor: '#eeeee',
+          backgroundColor: '#fff',
           minWidth: DeviceWidth,
         }}>
         <View
           style={{
             flexDirection: 'row',
-            backgroundColor: '#eeeee',
+            backgroundColor: '#fff',
             left: 0,
           }}>
-          <RowText fontColor={'black'} fontize={22} style={{marginRight: 20}}>
+          <RowText fontColor={'black'} fontize={22} style={{ marginRight: 20 }}>
             {`${name} / ${units}`}
           </RowText>
           <AppButton
@@ -96,7 +98,7 @@ const ProductDetail = () => {
           flex: 1,
           flexDirection: 'row',
           paddingTop: 10,
-          backgroundColor: '#eeeee',
+          backgroundColor: '#fff',
           minWidth: DeviceWidth,
         }}>
         <AppButton

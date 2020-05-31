@@ -1,6 +1,7 @@
 import React, { useContext, Suspense, useState, useEffect } from 'react';
 import Geolocation from '@react-native-community/geolocation';
 import Axios from 'axios';
+import _uniqBy from "lodash/uniqBy";
 import {
   Dimensions,
   ScrollView,
@@ -10,7 +11,6 @@ import {
   PermissionsAndroid,
   Alert,
 } from 'react-native';
-import { serverIP } from '../../constant';
 import services from '../../services/products.api';
 // import Geolocation from '@react-native-community/geolocation';
 const Categories = React.lazy(() =>
@@ -30,8 +30,8 @@ import {
 import { ApplicationContext } from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
 import ProductLoader from '../../Loaders/ProductLoader';
-
 import AsyncStorage from '@react-native-community/async-storage';
+import FilterProducts from '../FilterProducts/FilterProducts';
 
 
 const productDescription = [
@@ -72,93 +72,109 @@ const AppContent = ({ navigation }) => {
 
   // Geolocation.getCurrentPosition((info) => console.log(info));
   const [showLoader, setShowLoader] = useState(false);
+
+  const [rerender, setRerender] = useState(true);
   const [product, setProduct] = useState([]);
   const getData = useContext(ApplicationContext);
   useEffect(() => {
-    setShowLoader(true);
-    (async function () {
-      let shopId = await AsyncStorage.getItem('ShopId');
-      let lat, long, products;
-      let locationPermission = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      try {
-        lat = await AsyncStorage.getItem("@lat");
-        long = await AsyncStorage.getItem("@long");
-        let localProductData = await AsyncStorage.getItem('@allProducts');
-        products = JSON.parse(localProductData);
-        if (products) {
-          setProduct(products.data.products);
+    if (rerender) {
+
+
+      setShowLoader(true);
+      (async function () {
+        let shopId = await AsyncStorage.getItem('ShopId');
+        let lat, long, products;
+        let locationPermission = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        try {
+          lat = await AsyncStorage.getItem("@lat");
+          long = await AsyncStorage.getItem("@long");
+          let localProductData = await AsyncStorage.getItem('@allProducts');
+          products = JSON.parse(localProductData);
+          if (products) {
+            setProduct(products.data.products);
+            setShowLoader(false);
+          }
+        } catch (error) {
           setShowLoader(false);
         }
-      } catch (error) {
+        if (product.length === 0 || !lat || !long) {
+          locationPermission === 'granted' &&
+            Geolocation.getCurrentPosition(
+              //Will give you the current location
+              async (position) => {
+                //   console.log('PERMISIION ACCESS');
+                const currentLongitude = JSON.stringify(position.coords.longitude);
+                //getting the Longitude from the location json
+                const currentLatitude = JSON.stringify(position.coords.latitude);
+                //getting the Latitude from the location json
+                try {
+                  AsyncStorage.setItem("@lat", currentLatitude.toString());
+                  AsyncStorage.setItem("@long", currentLongitude.toString());
+                } catch (e) {
 
-      }
-      if (product.length === 0 || !lat || !long) {
-        locationPermission === 'granted' &&
-          Geolocation.getCurrentPosition(
-            //Will give you the current location
-            async (position) => {
-              //   console.log('PERMISIION ACCESS');
-              const currentLongitude = JSON.stringify(position.coords.longitude);
-              //getting the Longitude from the location json
-              const currentLatitude = JSON.stringify(position.coords.latitude);
-              //getting the Latitude from the location json
-              try {
-                AsyncStorage.setItem("@lat", currentLatitude.toString());
-                AsyncStorage.setItem("@long", currentLongitude.toString());
-              } catch (e) {
+                }
+                lat = parseFloat(currentLatitude);
+                long = parseFloat(currentLongitude);
 
-              }
-              lat = parseFloat(currentLatitude);
-              long = parseFloat(currentLongitude);
-
-              try {
-                let localProductData = await AsyncStorage.getItem('@allProducts');
-                products = JSON.parse(localProductData);
-                setProduct(products.data.products);
-                setShowLoader(false);
-              } catch (e) {
-                products = await services.productsList(lat, long); // fetching API
-              }
-              setProduct(products.data.products);
-              setShowLoader(false);
-            },
-            (error) => { setShowLoader(false); console.log("Unable to fetch Location") },
-            {
-              enableHighAccuracy: true,
-              timeout: 10000,
-              maximumAge: 1000,
-            },
-          );
-      }
+                try {
+                  let localProductData = await AsyncStorage.getItem('@allProducts');
+                  products = JSON.parse(localProductData);
+                  setProduct(products.data.products);
+                  setShowLoader(false);
+                } catch (e) {
+                  products = await services.productsList(lat, long); // fetching API
+                  if (products) {
+                    setProduct(products.data.products);
+                    setShowLoader(false);
+                  }
+                  else {
+                    setProduct([]);
+                    setShowLoader(false);
+                  }
 
 
-      console.log('getShopName', shopId);
-      // if (product.length === 0) {
-      //   await Axios({
-      //     method: 'GET',
-      //     url: `${serverIP}/api/ShopProducts/namelist?_id=${shopId}`,
-      //   })
-      //     .then((prod: any) => {
-      //       if (prod.data.products.length === 0) {
-      //         // navigation.navigate('LocationModal');
-      //       } else {
-      //         setShowLoader(false);
-      //         setProduct(prod.data.products);
-      //       }
-      //     })
-      //     .catch((e: any) => {
-      //       console.log(e);
-      //       setShowLoader(false);
-      //       // navigation.navigate('LocationModal');
-      //     });
-      // }
-    })();
+                  setRerender(false);
+                }
+
+              },
+              (error) => { setShowLoader(false); setRerender(false); console.log("Unable to fetch Location") },
+              {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 1000,
+              },
+            );
+        }
+
+
+        console.log('getShopName', shopId);
+        // if (product.length === 0) {
+        //   await Axios({
+        //     method: 'GET',
+        //     url: `${serverIP}/api/ShopProducts/namelist?_id=${shopId}`,
+        //   })
+        //     .then((prod: any) => {
+        //       if (prod.data.products.length === 0) {
+        //         // navigation.navigate('LocationModal');
+        //       } else {
+        //         setShowLoader(false);
+        //         setProduct(prod.data.products);
+        //       }
+        //     })
+        //     .catch((e: any) => {
+        //       console.log(e);
+        //       setShowLoader(false);
+        //       // navigation.navigate('LocationModal');
+        //     });
+        // }
+      })();
+    }
   }, [getData.storeId, navigation, product.length]);
 
   BackHandler.addEventListener('hardwareBackPress', () => {
-    BackHandler.exitApp()
+    // BackHandler.exitApp()
   });
   const navigate = () => {
     console.log('Cat data', getData.category);
@@ -214,10 +230,10 @@ const AppContent = ({ navigation }) => {
                     style={{ flex: 1, height: 'auto', marginTop: 5 }}
                     showsHorizontalScrollIndicator={false}>
                     <Suspense fallback={<ProductLoader />}>
-                      {product.length > 0 ? (
+                      {product && product.length > 0 ? (
                         <FlatList
                           style={{ height: 170 }}
-                          data={product}
+                          data={_uniqBy(product.splice(0, 6), 'pId')} // only Showing 6 Products
                           horizontal
                           renderItem={({ item }) => (
                             <SingleProduct
@@ -253,7 +269,7 @@ const AppContent = ({ navigation }) => {
               )
             )}
 
-          {showLoader ? (
+          {/* {showLoader ? (
             <ProductLoader />
           ) : (
               !showLoader &&
@@ -270,7 +286,7 @@ const AppContent = ({ navigation }) => {
                       {product.length > 0 ? (
                         <FlatList
                           style={{ height: 160 }}
-                          data={product}
+                          data={_uniqBy(product, "pId")}
                           horizontal
                           renderItem={({ item }) => (
                             <SingleProduct
@@ -298,12 +314,15 @@ const AppContent = ({ navigation }) => {
                   </ScrollView>
                 </>
               )
-            )}
+            )} */}
+          <FilterProducts isForeginData={false} navigation={navigation} isFooter={'show'} />
         </LayoutContainer>
+
       }
       <MainAppFooter isMain={{ isMain: true, navigation: navigation }} />
     </>
   );
 };
+
 
 export default React.memo(AppContent);

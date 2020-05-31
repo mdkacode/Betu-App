@@ -1,20 +1,21 @@
-import React, {useEffect, useState, useContext, Suspense} from 'react';
-import {View} from 'react-native';
-import {LayoutContainer} from '../../Modules/GlobalStyles/GlobalStyle';
+import React, { useEffect, useState, useContext, Suspense } from 'react';
+import { View, Alert } from 'react-native';
+import { LayoutContainer } from '../../Modules/GlobalStyles/GlobalStyle';
 import ListProduct from '../../Components/ListProduct/ListProduct';
 import MainAppFooter from '../AppFooter/AppFooter';
 import Axios from 'axios';
-import {ApplicationContext} from '../../Modules/context';
-import {serverIP} from '../../constant';
+import { ApplicationContext } from '../../Modules/context';
+import { serverIP } from '../../constant';
 import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
 import Nodata from '../../Loaders/noData';
 import AsyncStorage from '@react-native-community/async-storage';
+import FilterProducts from '../FilterProducts/FilterProducts';
 
 interface totalValue {
   discount: number;
   totalPrice: number;
 }
-const Products = ({navigation}) => {
+const Products = ({ navigation }) => {
   const getData = useContext(ApplicationContext);
   const [isLoader, Loader] = useState(false);
   const [productList, setProductList] = useState([]);
@@ -29,20 +30,19 @@ const Products = ({navigation}) => {
       let storeId = await AsyncStorage.getItem('ShopId');
       productList.length === 0 && Loader(true);
       // console.log('fsf', getData.shopId);
-      Axios({
-        method: 'GET',
-        url: `${serverIP}/api/ShopProducts/namelist?_id=${storeId}&products.cIds=${getData.category._id}`,
-      })
-        .then((prod: any) => {
-          // console.log('GET STORE DATA HERE !!', getData.productList);
-          // console.log('GET FORIEGN VALUE !!', prod.data.products);
-          setProductList(prod.data.products);
-          Loader(false);
-        })
-        .catch((e: any) => {
-          // console.log(e);
-          Loader(false);
-        });
+      try {
+        let allProductList = await AsyncStorage.getItem('@allProducts');
+        let parseAllProduct = JSON.parse(allProductList);
+        // console.log('GET PRODUCTS H');
+        // console.log(parseAllProduct.data);
+
+        let filteredProduct = await parseAllProduct.data.products.filter((item) => getData.category._id === item.cIds)
+        console.log('GET ALL PRODUCT AND FILTER THEM', filteredProduct);
+        setProductList(filteredProduct);
+        Loader(false);
+      } catch (error) {
+        console.log("GETTING EROROROROR", error);
+      }
     })();
   }, [
     getData.category._id,
@@ -57,13 +57,16 @@ const Products = ({navigation}) => {
     }
   });
   const getValueHere = () => {
+    console.log("GREAT THINGS");
+    console.log('GET USER HERE');
     let totalPrice = 0;
+    Alert.alert("payment");
     let discount = 0;
     getData.productList.forEach((e) => {
       e && e.price && (discount += (e.price.mrp - e.price.sp) * e.quantity);
       e && e.price && (totalPrice += e.price.sp * e.quantity);
     });
-    setTotal({discount, totalPrice});
+    setTotal({ discount, totalPrice });
   };
 
   return (
@@ -74,14 +77,12 @@ const Products = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         marginTop={1}
         // eslint-disable-next-line react-native/no-inline-styles
-        style={{paddingBottom: 100}}>
+        style={{ paddingBottom: 100 }}>
         <View
           // eslint-disable-next-line react-native/no-inline-styles
-          style={{flexDirection: 'column', paddingBottom: 50}}>
-          {productList.length > 0
-            ? productList.map((e) => (
-                <ListProduct elements={e} refresh={() => getValueHere()} />
-              ))
+          style={{ flexDirection: 'column', paddingBottom: 50 }}>
+          {productList.length > 0 ? < FilterProducts elements={productList} navigation={navigation} isFooter={'show'} />
+
             : !isLoader && <Nodata navigation={navigation} topic="Product" />}
         </View>
       </LayoutContainer>

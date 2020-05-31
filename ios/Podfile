@@ -84,6 +84,11 @@ target 'Payal' do
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
 
 
+  pod 'RNLocalize', :path => '../node_modules/react-native-localize'
+
+  pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
+
+
   target 'PayalTests' do
     inherit! :complete
     # Pods for testing

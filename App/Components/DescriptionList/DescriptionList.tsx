@@ -1,16 +1,16 @@
 import React from 'react';
-import {View} from 'react-native';
-import {DeviceWidth} from '../DeviceDeminsions/DeviceDeminsions';
-import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
-import {Darkest} from '../../Modules/GlobalStyles/GlobalColors';
-import {Divider} from 'react-native-elements';
+import { View } from 'react-native';
+import { DeviceWidth } from '../DeviceDeminsions/DeviceDeminsions';
+import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
+import { Darkest } from '../../Modules/GlobalStyles/GlobalColors';
+import { Divider } from 'react-native-elements';
 
 interface DesginProps {
   Name: string;
   Description: string;
 }
 const DescriptionList = (props: DesginProps) => {
-  let {Name, Description} = props;
+  let { Name, Description } = props;
   return (
     (Name && Description && (
       <>
@@ -21,7 +21,7 @@ const DescriptionList = (props: DesginProps) => {
             marginLeft: 0,
             marginRight: 15,
             paddingTop: 6,
-            backgroundColor: '#eeeee',
+            backgroundColor: '#fff',
             minWidth: DeviceWidth,
           }}>
           <RowText fontColor={Darkest} fontize={15} fontFormat="Normal">
@@ -30,7 +30,7 @@ const DescriptionList = (props: DesginProps) => {
           <RowText
             fontColor={Darkest}
             fontize={15}
-            style={{paddingLeft: 5, paddingRight: 25}}>
+            style={{ paddingLeft: 5, paddingRight: 25 }}>
             :
           </RowText>
           <RowText fontColor={Darkest} fontize={15} fontFormat="Normal">

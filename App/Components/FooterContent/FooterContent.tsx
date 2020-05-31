@@ -5,12 +5,12 @@ import {
   AppView,
   IconImage,
 } from '../../Modules/GlobalStyles/GlobalStyle';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
 import { Badge } from 'react-native-elements';
 
 interface FooterContent {
   action?: any;
-  isRefresh: boolean;
+  isRefresh?: boolean;
 }
 const FooterContent = (props: FooterContent) => {
   useEffect(() => {
@@ -18,8 +18,13 @@ const FooterContent = (props: FooterContent) => {
     console.log(props.isRefresh);
   }, [props.isRefresh]);
   let storeData = useContext(ApplicationContext);
-  console.log(storeData.productList.length);
+
   console.log('qwertyuytrewessrty');
+  const cartAction = () => {
+    console.log(storeData.productList, "UPDATE PRODUCT LIST", storeData.productList.length);
+    storeData.productList.length > 1 ? props.action('Cart') : Alert.alert("Please Add Product")
+    console.log('GET VALUE', storeData.productList.length)
+  }
   return (
     <Container>
       <TouchableOpacity onPress={(e) => props.action('Home')}>
@@ -31,14 +36,16 @@ const FooterContent = (props: FooterContent) => {
           />
         </AppView>
       </TouchableOpacity>
-      <AppView items={5}>
-        <IconImage
-          source={require('../../assets/images/icons/heart.png')}
-          width={30}
-          height={30}
-        />
-      </AppView>
-      <TouchableOpacity onPress={() => props.action('Cart')}>
+      <TouchableOpacity onPress={(e) => props.action('FilterProducts')}>
+        <AppView items={5}>
+          <IconImage
+            source={require('../../assets/images/icons/search-white.png')}
+            width={30}
+            height={30}
+          />
+        </AppView>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => cartAction()}>
         <AppView items={5}>
           <IconImage
             source={require('../../assets/images/icons/cart.png')}
@@ -46,13 +53,13 @@ const FooterContent = (props: FooterContent) => {
             height={30}
           />
 
-          {storeData.productList.length != (0 || 1) && (
+          {/* {storeData.productList.length != (0 || 1) && (
             <Badge
               status="error"
               containerStyle={{ position: 'absolute', top: -4, right: -4 }}
               value={storeData.productList.length - 1}
             />
-          )}
+          )} */}
         </AppView>
       </TouchableOpacity>
       <TouchableOpacity onPress={(e) => props.action('LocationModal')}>

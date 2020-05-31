@@ -11,6 +11,7 @@ import {
 import CategoryLoader from '../../Loaders/CategoryLoader';
 import { serverIP } from '../../constant';
 import Axios from 'axios';
+import Images from '../SafeImage/SafeImage';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -56,14 +57,14 @@ const Categories = (props: catProps) => {
             <TouchableOpacity onPress={() => selectCategory(element)}>
               <CircleArea height={500} width={windowWidth / 6}>
                 <View style={{ flex: 1, flexDirection: 'column' }}>
-                  <FastImage
-                    source={{ uri: element.imageList[0] }}
+                  <Images
+                    source={[{ uri: element.imageList[0] },
+                    require("../../assets/images/Placeholder/no-camera.png")]}
                     style={{
                       width: 35,
                       height: 30,
                       margin: 10,
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
                   />
 
                   <RowText style={{ alignSelf: 'center' }} fontize={10} fontColor="black">

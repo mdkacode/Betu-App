@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
-import { PermissionsAndroid, Alert } from 'react-native';
+import { PermissionsAndroid, Alert, DeviceEventEmitter } from 'react-native';
 import { getPhoneNumber, getUniqueId } from 'react-native-device-info';
 import { LayoutContainer, RowText } from '../../Modules/GlobalStyles/GlobalStyle';
 import { View, Animated, Keyboard } from 'react-native';
@@ -14,17 +14,24 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { ApplicationContext } from '../../Modules/context';
 import Axios from 'axios';
 import { serverIP } from '../../constant';
+import LocationCheck from "../../misc/locationAccess";
+import UserProfileUpdate from '../../Components/UserProfileModal/UserProfileUpdate';
+
 
 const GateKeeper = ({ navigation }) => {
   let dataStore = useContext(ApplicationContext);
   let [userPhone, setuserPhone] = useState('');
   let [localOtp, setlocalOtp] = useState('');
+  let [userUpdate, setUserUpdate] = useState(false);
+  let [showUserUpdate, setShowUserUpdate] = useState(false);
   let [verifyData, setVerifyData] = useState('');
   let [latLong, setlatLong] = useState({} as { lat: string; long: string });
 
   useEffect(() => {
     userPhone === '' &&
       (async function () {
+
+        LocationCheck();
         let locationPermission = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
@@ -32,6 +39,9 @@ const GateKeeper = ({ navigation }) => {
         let phoneLocation = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
         );
+
+
+
         locationPermission == 'granted' &&
           Geolocation.getCurrentPosition(
             //Will give you the current location
@@ -48,7 +58,7 @@ const GateKeeper = ({ navigation }) => {
             },
             (error) => console.log(error.message),
             {
-              enableHighAccuracy: true,
+              enableHighAccuracy: false,
               timeout: 20000,
               maximumAge: 1000,
             },
@@ -67,14 +77,21 @@ const GateKeeper = ({ navigation }) => {
     if (text.length === 4) {
       if (text === verifyData) {
         await AsyncStorage.setItem('@LoginStatus', 'true');
+        if (userUpdate) {
+          setShowUserUpdate(true);
+        }
         navigation.navigate('MainHome');
       }
     }
   };
 
   let count = 0;
-  const dismissKeyboard = (text: string) => {
+  const dismissKeyboard = async (text: string) => {
     if (text.length === 10) {
+
+      let locationPermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
       Axios({
         method: 'post',
         url: `${serverIP}/api/user/add`,
@@ -91,6 +108,14 @@ const GateKeeper = ({ navigation }) => {
           console.log('GETDATAA', response.data.User[0]);
           await AsyncStorage.setItem('@userPhone', response.data.User[0].phone);
           dataStore.userInfo = response.data.User[0];
+          try {
+            if (response.data.User[0].addresses.length === 0) {
+
+              setUserUpdate(true);
+            }
+          } catch (error) {
+
+          }
           setVerifyData(response.data.User[0].otp);
           Alert.alert(response.data.User[0].otp);
           // console.log(verifyData, 'REMOTEOTP');
@@ -108,56 +133,59 @@ const GateKeeper = ({ navigation }) => {
   };
 
   return (
-    <>
-      <LayoutContainer
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        marginTop={1}
-        style={{ backgroundColor: '#eeeee' }}>
-        <View style={{ alignItems: 'center' }}>
-          <AnimationComponent
-            height={170}
-            isLoop={false}
-            animationPath={'login'}
-            isAutoPlay={true}
-          />
-          <RowText
-            fontColor="black"
-            fontize={23}
-            fontFormat="bold"
-            style={{ marginBottom: 10 }}>
-            FIRZI
+    showUserUpdate ? <UserProfileUpdate isShow={true} /> :
+      <>
+        <LayoutContainer
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          marginTop={1}
+          style={{ backgroundColor: '#fff' }}>
+          <View style={{ alignItems: 'center' }}>
+            <AnimationComponent
+              height={170}
+              isLoop={false}
+              animationPath={'login'}
+              isAutoPlay={true}
+            />
+            <RowText
+              fontColor="black"
+              fontize={23}
+              fontFormat="bold"
+              style={{ marginBottom: 10 }}>
+              FIRZI
           </RowText>
-          <Textinput
-            itemHeight={50}
-            onChangeText={(text) => dismissKeyboard(text)}
-            maxLength={13}
-            defaultValue={userPhone}
-            placeholder="Enter Mobile Number"
-            keyboardType="phone-pad"
-          />
+            <Textinput
+              itemHeight={50}
+              onChangeText={(text) => dismissKeyboard(text)}
+              maxLength={13}
+              style={{ elevation: 5 }}
+              defaultValue={userPhone}
+              placeholder="Enter Mobile Number"
+              keyboardType="phone-pad"
+            />
 
-          <Textinput
-            itemHeight={50}
-            placeholder="Enter OTP"
-            onChangeText={(text) => SubmitOTP(text)}
-            maxLength={4}
-            keyboardType="phone-pad"
-          />
-          <AppButton
-            key="WishlistButton"
-            borderd={true}
-            backgroundColor={ThemeYellow}
-            fontColor={Darkest}
-            content={<RowText fontColor={'black'}>{`Submit`}</RowText>}
-            btnWidth={DeviceWidth - 12}
-            marginRight={10}
-            marginleft={1}
-            action={() => SubmitOTP(localOtp)}
-          />
-        </View>
-      </LayoutContainer>
-    </>
+            <Textinput
+              itemHeight={50}
+              placeholder="Enter OTP"
+              onChangeText={(text) => SubmitOTP(text)}
+              maxLength={4}
+              style={{ elevation: 5 }}
+              keyboardType="phone-pad"
+            />
+            <AppButton
+              key="WishlistButton"
+              borderd={true}
+              backgroundColor={ThemeYellow}
+              fontColor={Darkest}
+              content={<RowText fontColor={'black'}>{`Submit`}</RowText>}
+              btnWidth={DeviceWidth - 12}
+              marginRight={10}
+              marginleft={1}
+              action={() => SubmitOTP(localOtp)}
+            />
+          </View>
+        </LayoutContainer>
+      </>
   );
 };
 

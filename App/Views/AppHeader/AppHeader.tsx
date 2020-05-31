@@ -1,12 +1,12 @@
-import React, {useContext} from 'react';
-import {Dimensions, TouchableOpacity} from 'react-native';
+import React, { useContext } from 'react';
+import { Dimensions, TouchableOpacity } from 'react-native';
 import {
   Container,
   AppView,
   RowText,
   IconImage,
 } from '../../Modules/GlobalStyles/GlobalStyle';
-import {ApplicationContext} from '../../Modules/context';
+import { ApplicationContext } from '../../Modules/context';
 
 interface NavProps {
   titleName?: string;
@@ -18,7 +18,7 @@ const windowWidth = Dimensions.get('window').width;
 const AppHeader = (props: NavProps) => {
   const store = useContext(ApplicationContext);
   const locationHandler = () => {
-    props.navigation.navigate('Location');
+    props.navigation.navigate('FilterProducts');
   };
   return (
     <>
@@ -33,14 +33,16 @@ const AppHeader = (props: NavProps) => {
           </RowText>
         </AppView>
         <AppView marginHeight={1} height={5} iPosition={'flex-end'}>
-          <IconImage
-            source={require('../../assets/images/icons/search.png')}
-            width={24}
-            height={24}
-          />
+          <TouchableOpacity onPress={locationHandler}>
+            <IconImage
+              source={require('../../assets/images/icons/search.png')}
+              width={24}
+              height={24}
+            />
+          </TouchableOpacity>
         </AppView>
 
-        <AppView width={35} marginHeight={1} height={5} iPosition={'flex-end'}>
+        {/* <AppView width={35} marginHeight={1} height={5} iPosition={'flex-end'}>
           <TouchableOpacity onPress={locationHandler}>
             <IconImage
               source={require('../../assets/images/icons/notificationBell.png')}
@@ -48,7 +50,7 @@ const AppHeader = (props: NavProps) => {
               height={24}
             />
           </TouchableOpacity>
-        </AppView>
+        </AppView> */}
       </Container>
       {/*Header END */}
     </>

@@ -53,7 +53,7 @@ const AddRemoveBtn = (props: AddRemoveBtnProps) => {
             value={defaultValue.toString()}
             editable={false}
           />
-          <TouchableOpacity onPress={() => toggleAction(true)}>
+          <TouchableOpacity onPress={() => toggleAction(defaultValue === remoteValues.maxOrderCount ? false : true)}>
             <Image
               source={require('../../assets/images/icons/plus.png')}
               // eslint-disable-next-line react-native/no-inline-styles
@@ -83,7 +83,7 @@ const style = StyleSheet.create({
   text: {
     height: 35,
     color: 'black',
-    borderColor: '#eeee',
+    borderColor: '#fff',
     borderWidth: 0,
     textAlign: 'center',
     fontWeight: 'bold',

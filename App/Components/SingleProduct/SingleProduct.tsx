@@ -10,6 +10,7 @@ import utils from '../../utils';
 import { Darkest, RupeeSymbol } from '../../Modules/GlobalStyles/GlobalColors';
 import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
+import Images from '../SafeImage/SafeImage';
 
 interface Iprice {
   mrp: number;
@@ -101,7 +102,7 @@ const SingleProduct = (props: IremoteProps) => {
             // eslint-disable-next-line react-native/no-inline-styles
             style={{
               width: 130,
-              elevation: 5,
+              elevation: 15,
               height: 150,
               borderWidth: 0,
               alignItems: 'center',
@@ -113,21 +114,21 @@ const SingleProduct = (props: IremoteProps) => {
             }}>
             <TouchableOpacity
               onPress={() => props.productDetail(props.elements)}>
-              <FastImage
+              <Images
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   width: 70,
                   height: 70,
                   margin: 4,
                 }}
-                source={{ uri: imageList[0] }}
-                resizeMode={FastImage.resizeMode.contain}
+                source={[{ uri: imageList[0] }, require("../../assets/images/Placeholder/no-camera.png")]}
+
               />
             </TouchableOpacity>
             <View style={{ flexDirection: 'row' }}>
-              <RowText fontColor="red" fontize={12} cut={true}>
+              {price && price.mrp !== price.sp && <RowText fontColor="red" fontize={12} cut={true}>
                 {`${RupeeSymbol} ${price ? price.mrp : '--'}`}
-              </RowText>
+              </RowText>}
               <RowText fontColor="green" fontize={12} cut={false}>
                 {`${RupeeSymbol} ${price ? price.sp : '--'}`}
               </RowText>

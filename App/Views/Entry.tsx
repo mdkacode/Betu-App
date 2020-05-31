@@ -1,6 +1,6 @@
 import React from 'react';
 import AppLayout from './AppLayout/AppLayout';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 const EntryComponent = () => {
   console.disableYellowBox = true;
 
@@ -11,7 +11,7 @@ const EntryComponent = () => {
         // dark-content, light-content and default
         hidden={false}
         //To hide statusBar
-        backgroundColor="#eeee"
+        backgroundColor="#fff"
         //Background color of statusBar only works for Android
         translucent={false}
         //allowing light, but not detailed shapes

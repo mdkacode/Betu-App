@@ -6,7 +6,7 @@ const windowWidth = Dimensions.get('window').width;
 //  const windowHeight = Dimensions.get('window').height;
 export const LayoutContainer = styled.ScrollView`
   flex: 1;
-  background-color: #eeeeee;
+  background-color: #fff;
   flex-direction: column;
   margin-top: 15px;
 `;
@@ -18,7 +18,7 @@ export const TextBox = styled.TextInput`
   font-weight: 900;
   font-family: 'OpenSans-Bold';
   /* border-radius: 15px;
-  border: 2px solid #eee;
+  border: 2px solid #fff;
   box-shadow: 0 0 80px #d5d5d5; */
 `;
 
