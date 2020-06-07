@@ -1,12 +1,11 @@
-import React, { Suspense, useState, useEffect, useContext } from 'react';
-import { Image, View, Alert } from 'react-native';
-import { ListItem, Divider } from 'react-native-elements';
-import { RowText } from '../../Modules/GlobalStyles/GlobalStyle';
+import React, {Suspense, useState, useEffect, useContext} from 'react';
+import {Image, View, Alert} from 'react-native';
+import {ListItem, Divider} from 'react-native-elements';
+import {RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
-import { Darkest, RupeeSymbol } from '../../Modules/GlobalStyles/GlobalColors';
-import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
-import FastImage from 'react-native-fast-image';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
+import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Images from '../SafeImage/SafeImage';
 interface Iprice {
   mrp: number;
@@ -30,17 +29,16 @@ interface IremoteProps {
   elements?: productDetailsProps;
   refresh?: any;
   navigation?: any;
-
 }
 
 const ListProduct = (props: IremoteProps) => {
   const getData = useContext(ApplicationContext);
   useEffect(() => {
     return () => {
-      //   console.log('ISLEAVING', getData.productList);
+      //
     };
   }, [getData.productList]);
-  let { productList } = getData; // getting data from the store
+  let {productList} = getData; // getting data from the store
 
   let {
     name,
@@ -53,7 +51,6 @@ const ListProduct = (props: IremoteProps) => {
     isAvailable,
     quantity,
   } = props.elements;
-  console.log(props.elements, "GET ELEMENT DATA HERE AND PRINT IT");
   let actionObject = {
     _id,
     price,
@@ -79,17 +76,18 @@ const ListProduct = (props: IremoteProps) => {
       orderCount = iniValue - 1;
       iniValue > 0 && setIniValue(iniValue - 1);
     }
-    //console.log('propduct count is ', orderCount);
+    //
 
-    console.log('CONTEXT DARTA', getData)
     let tempVar = props.elements;
     tempVar.quantity = orderCount;
-    tempVar.storeId = getData.shopId.shopId !== undefined ? getData.shopId.shopId : getData.storeId;
+    tempVar.storeId =
+      getData.shopId.shopId !== undefined
+        ? getData.shopId.shopId
+        : getData.storeId;
     if (getData.storeId) {
       tempVar.shop_id = getData.storeId; // temp Fix For data
     }
     tempVar.userId = getData.userid;
-    //console.log(tempVar);
     let isItemExists = productList.findIndex((e) => e._id == tempVar._id);
     if (orderCount === 0) {
       productList.splice(isItemExists, 1);
@@ -104,13 +102,10 @@ const ListProduct = (props: IremoteProps) => {
     try {
       props.refresh();
     } catch (e) {
-      //console.log(e);
+      console.log(e, 'CARTLIST ADDITION ERROR');
     }
-
-    console.log(productList, 'qwertyu');
   };
   const ProductDetail = (productDetail: any) => {
-    console.log('GETDATAaaa', productDetail);
     let imageFinalArray = [];
     productDetail &&
       productDetail.imageList.map((e: any) => {
@@ -120,39 +115,48 @@ const ListProduct = (props: IremoteProps) => {
           illustration: e,
         });
       });
-    console.log(imageFinalArray, "qwertyuiuytre");
-    productDetail['imageList'] = imageFinalArray;
+
+    productDetail.imageList = imageFinalArray;
     getData.productDescInfo = productDetail; // setting data to store !!
-    props.navigation.navigate('ProductDetail', { title: 'Categories' });
-  }
+    props.navigation.navigate('ProductDetail', {title: 'Categories'});
+  };
   // Get Active product Object End Here
   return (
     <ApplicationConumer>
       {() => (
         <Suspense fallback={<RowText fontize={20}>Loading</RowText>}>
           <ListItem
-            containerStyle={[{ backgroundColor: '#fff', elevation: 15, marginBottom: 1 }]}
+            containerStyle={[
+              {backgroundColor: '#fff', elevation: 15, marginBottom: 1},
+            ]}
             leftElement={
               <Images
                 source={[
-                  { uri: imageList[0] },
+                  {
+                    uri:
+                      typeof imageList[0] == 'string'
+                        ? imageList[0]
+                        : 'https://via.placeholder.com/250',
+                  },
                   require('../../assets/images/Placeholder/no-camera.png'),
                 ]}
-                style={{ width: 40, height: 40 }}
+                style={{width: 40, height: 40}}
               />
             }
             key={'product'}
             subtitle={
-              <View style={{ flexDirection: 'row' }}>
-                {price && price.sp !== price.mrp && <RowText
-                  fontColor={'red'}
-                  fontize={12}
-                  cut={true}
-                  fontFormat="Italic">
-                  {`${RupeeSymbol} ${price ? price.mrp : 'No Price Found'}`}
-                </RowText>}
+              <View style={{flexDirection: 'row'}}>
+                {price && price.sp !== price.mrp && (
+                  <RowText
+                    fontColor={'red'}
+                    fontize={12}
+                    cut={true}
+                    fontFormat="Italic">
+                    {`${RupeeSymbol} ${price ? price.mrp : 'No Price Found'}`}
+                  </RowText>
+                )}
                 <RowText
-                  style={{ paddingLeft: 5 }}
+                  style={{paddingLeft: 5}}
                   fontColor={'green'}
                   fontize={14}>
                   {`${RupeeSymbol} ${price ? price.sp : 'No Price Found'}`}
@@ -174,7 +178,7 @@ const ListProduct = (props: IremoteProps) => {
               />
             }
           />
-          <Divider style={{ backgroundColor: '#fff', elevation: 15 }} />
+          <Divider style={{backgroundColor: '#fff', elevation: 15}} />
         </Suspense>
       )}
     </ApplicationConumer>

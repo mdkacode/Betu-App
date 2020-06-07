@@ -129,7 +129,7 @@ const LocationModal = ({ navigation }) => {
 
 
   return (
-    <>
+    <React.Fragment>
 
       {!isCalled && <LayoutContainer
         showsVerticalScrollIndicator={true}
@@ -167,7 +167,7 @@ const LocationModal = ({ navigation }) => {
         </Modal>
       </LayoutContainer>}
       {isCalled && <FilterProducts navigation={navigation} isForeginData={true} elements={listProducts} ></FilterProducts>}
-    </>
+    </React.Fragment>
   );
 };
 export default LocationModal;

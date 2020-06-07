@@ -1,14 +1,13 @@
-import React, { Suspense, useState, useContext } from 'react';
-import { TouchableOpacity, Image, View, AsyncStorage } from 'react-native';
-import { ListItem, Divider } from 'react-native-elements';
-import { RowText, IconImage } from '../../Modules/GlobalStyles/GlobalStyle';
+import React, {Suspense, useState, useContext} from 'react';
+import {TouchableOpacity, Image, View, AsyncStorage} from 'react-native';
+import {ListItem, Divider} from 'react-native-elements';
+import {RowText, IconImage} from '../../Modules/GlobalStyles/GlobalStyle';
 import AddRemoveBtn from '../AddRemoveBtn/AddRemoveBtn';
 import FooterContent from '../FooterContent/FooterContent';
-import ContentLoader, { List } from 'react-content-loader';
-import FastImage from 'react-native-fast-image';
+import ContentLoader, {List} from 'react-content-loader';
 import utils from '../../utils';
-import { Darkest, RupeeSymbol } from '../../Modules/GlobalStyles/GlobalColors';
-import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
+import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
+import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
 import Images from '../SafeImage/SafeImage';
 
@@ -30,13 +29,13 @@ interface productDetailsProps {
 interface IremoteProps {
   elements?: productDetailsProps;
   refresh?: any;
-  productDetail?: ({ }) => void;
+  productDetail?: ({}) => void;
 }
 
 const SingleProduct = (props: IremoteProps) => {
   const getData = useContext(ApplicationContext);
 
-  let { productList } = getData;
+  let {productList} = getData;
   let {
     name,
     price,
@@ -84,14 +83,14 @@ const SingleProduct = (props: IremoteProps) => {
     }
     props.refresh();
     try {
+      productList = productList.filter(
+        (value) => Object.keys(value).length !== 0,
+      );
       await AsyncStorage.removeItem('@localCartItem');
       await AsyncStorage.setItem('@localCartItem', JSON.stringify(productList));
+    } catch (error) {}
 
-    } catch (error) {
-
-    }
-
-    // console.log(productList, 'qwertyu');
+    console.log(productList, 'Cart Addition Error');
   };
   // Get Active product Object End Here
   return (
@@ -115,20 +114,28 @@ const SingleProduct = (props: IremoteProps) => {
             <TouchableOpacity
               onPress={() => props.productDetail(props.elements)}>
               <Images
-                // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   width: 70,
                   height: 70,
                   margin: 4,
                 }}
-                source={[{ uri: imageList[0] }, require("../../assets/images/Placeholder/no-camera.png")]}
-
+                source={[
+                  {
+                    uri:
+                      typeof imageList[0] === 'string'
+                        ? imageList[0]
+                        : 'https://via.placeholder.com/250',
+                  },
+                  require('../../assets/images/Placeholder/no-camera.png'),
+                ]}
               />
             </TouchableOpacity>
-            <View style={{ flexDirection: 'row' }}>
-              {price && price.mrp !== price.sp && <RowText fontColor="red" fontize={12} cut={true}>
-                {`${RupeeSymbol} ${price ? price.mrp : '--'}`}
-              </RowText>}
+            <View style={{flexDirection: 'row'}}>
+              {price && price.mrp !== price.sp && (
+                <RowText fontColor="red" fontize={12} cut={true}>
+                  {`${RupeeSymbol} ${price ? price.mrp : '--'}`}
+                </RowText>
+              )}
               <RowText fontColor="green" fontize={12} cut={false}>
                 {`${RupeeSymbol} ${price ? price.sp : '--'}`}
               </RowText>
@@ -136,7 +143,8 @@ const SingleProduct = (props: IremoteProps) => {
             <RowText fontColor="black" fontize={12}>
               {utils.trimText(name)}
             </RowText>
-            <View style={{ flexDirection: 'row', elevation: 5, paddingBottom: 10 }}>
+            <View
+              style={{flexDirection: 'row', elevation: 5, paddingBottom: 10}}>
               <AddRemoveBtn
                 remoteValues={actionObject}
                 defaultValue={iniValue}
@@ -145,7 +153,7 @@ const SingleProduct = (props: IremoteProps) => {
             </View>
           </View>
 
-          <Divider style={{ backgroundColor: Darkest, marginBottom: 10 }} />
+          <Divider style={{backgroundColor: Darkest, marginBottom: 10}} />
         </Suspense>
       )}
     </ApplicationConumer>

@@ -13,7 +13,7 @@ const PaymentSuccess = ({ navigation }) => {
   const getStoreData = useContext(ApplicationContext);
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('MainHome');
+      navigation.navigate('Home');
     }, 3000);
   });
   return (

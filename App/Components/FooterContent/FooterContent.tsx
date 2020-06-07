@@ -1,12 +1,11 @@
-import React, { useContext, useEffect } from 'react';
-import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
+import React, {useContext, useEffect} from 'react';
+import {ApplicationContext} from '../../Modules/context';
 import {
   Container,
   AppView,
   IconImage,
 } from '../../Modules/GlobalStyles/GlobalStyle';
-import { TouchableOpacity, Alert } from 'react-native';
-import { Badge } from 'react-native-elements';
+import {TouchableOpacity, Alert} from 'react-native';
 
 interface FooterContent {
   action?: any;
@@ -21,13 +20,19 @@ const FooterContent = (props: FooterContent) => {
 
   console.log('qwertyuytrewessrty');
   const cartAction = () => {
-    console.log(storeData.productList, "UPDATE PRODUCT LIST", storeData.productList.length);
-    storeData.productList.length > 1 ? props.action('Cart') : Alert.alert("Please Add Product")
-    console.log('GET VALUE', storeData.productList.length)
-  }
+    console.log(
+      storeData.productList,
+      'UPDATE PRODUCT LIST',
+      storeData.productList.length,
+    );
+    storeData.productList.length > 0
+      ? props.action('Cart')
+      : Alert.alert('Please Add Product');
+    console.log('GET VALUE', storeData.productList.length);
+  };
   return (
     <Container>
-      <TouchableOpacity onPress={(e) => props.action('Home')}>
+      <TouchableOpacity onPress={() => props.action('Home')}>
         <AppView marginLeft={10} items={5}>
           <IconImage
             source={require('../../assets/images/icons/home.png')}
@@ -36,7 +41,7 @@ const FooterContent = (props: FooterContent) => {
           />
         </AppView>
       </TouchableOpacity>
-      <TouchableOpacity onPress={(e) => props.action('FilterProducts')}>
+      <TouchableOpacity onPress={() => props.action('FilterProducts')}>
         <AppView items={5}>
           <IconImage
             source={require('../../assets/images/icons/search-white.png')}
@@ -62,7 +67,7 @@ const FooterContent = (props: FooterContent) => {
           )} */}
         </AppView>
       </TouchableOpacity>
-      <TouchableOpacity onPress={(e) => props.action('LocationModal')}>
+      <TouchableOpacity onPress={() => props.action('LocationModal')}>
         <AppView items={5}>
           <IconImage
             source={require('../../assets/images/icons/list.png')}
@@ -71,7 +76,7 @@ const FooterContent = (props: FooterContent) => {
           />
         </AppView>
       </TouchableOpacity>
-      <TouchableOpacity onPress={(e) => props.action('UserProfile')}>
+      <TouchableOpacity onPress={() => props.action('UserProfile')}>
         <AppView items={5}>
           <IconImage
             source={require('../../assets/images/icons/user.png')}

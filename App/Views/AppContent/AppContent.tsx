@@ -1,7 +1,7 @@
-import React, { useContext, Suspense, useState, useEffect } from 'react';
+import React, {useContext, Suspense, useState, useEffect} from 'react';
 import Geolocation from '@react-native-community/geolocation';
 import Axios from 'axios';
-import _uniqBy from "lodash/uniqBy";
+import _uniqBy from 'lodash/uniqBy';
 import {
   Dimensions,
   ScrollView,
@@ -14,25 +14,24 @@ import {
 import services from '../../services/products.api';
 // import Geolocation from '@react-native-community/geolocation';
 const Categories = React.lazy(() =>
-  import('../../Components/Categories/Categories'),
-),
+    import('../../Components/Categories/Categories'),
+  ),
   MyCorsoal = React.lazy(() => import('../../Components/Corusal/corusoal')),
   SingleProduct = React.lazy(() =>
     import('../../Components/SingleProduct/SingleProduct'),
   ),
   MainAppFooter = React.lazy(() => import('../AppFooter/AppFooter'));
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 import {
   LayoutContainer,
   RowText,
   AppView,
 } from '../../Modules/GlobalStyles/GlobalStyle';
-import { ApplicationContext } from '../../Modules/context';
+import {ApplicationContext} from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
 import ProductLoader from '../../Loaders/ProductLoader';
 import AsyncStorage from '@react-native-community/async-storage';
 import FilterProducts from '../FilterProducts/FilterProducts';
-
 
 const productDescription = [
   {
@@ -68,8 +67,7 @@ const productDescription = [
 ];
 
 // const file = require("../../assets/Actions/Payments/Success.json")
-const AppContent = ({ navigation }) => {
-
+const AppContent = ({navigation}) => {
   // Geolocation.getCurrentPosition((info) => console.log(info));
   const [showLoader, setShowLoader] = useState(false);
 
@@ -78,8 +76,6 @@ const AppContent = ({ navigation }) => {
   const getData = useContext(ApplicationContext);
   useEffect(() => {
     if (rerender) {
-
-
       setShowLoader(true);
       (async function () {
         let shopId = await AsyncStorage.getItem('ShopId');
@@ -88,8 +84,8 @@ const AppContent = ({ navigation }) => {
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
         try {
-          lat = await AsyncStorage.getItem("@lat");
-          long = await AsyncStorage.getItem("@long");
+          lat = await AsyncStorage.getItem('@lat');
+          long = await AsyncStorage.getItem('@long');
           let localProductData = await AsyncStorage.getItem('@allProducts');
           products = JSON.parse(localProductData);
           if (products) {
@@ -105,21 +101,25 @@ const AppContent = ({ navigation }) => {
               //Will give you the current location
               async (position) => {
                 //   console.log('PERMISIION ACCESS');
-                const currentLongitude = JSON.stringify(position.coords.longitude);
+                const currentLongitude = JSON.stringify(
+                  position.coords.longitude,
+                );
                 //getting the Longitude from the location json
-                const currentLatitude = JSON.stringify(position.coords.latitude);
+                const currentLatitude = JSON.stringify(
+                  position.coords.latitude,
+                );
                 //getting the Latitude from the location json
                 try {
-                  AsyncStorage.setItem("@lat", currentLatitude.toString());
-                  AsyncStorage.setItem("@long", currentLongitude.toString());
-                } catch (e) {
-
-                }
+                  AsyncStorage.setItem('@lat', currentLatitude.toString());
+                  AsyncStorage.setItem('@long', currentLongitude.toString());
+                } catch (e) {}
                 lat = parseFloat(currentLatitude);
                 long = parseFloat(currentLongitude);
 
                 try {
-                  let localProductData = await AsyncStorage.getItem('@allProducts');
+                  let localProductData = await AsyncStorage.getItem(
+                    '@allProducts',
+                  );
                   products = JSON.parse(localProductData);
                   setProduct(products.data.products);
                   setShowLoader(false);
@@ -128,18 +128,21 @@ const AppContent = ({ navigation }) => {
                   if (products) {
                     setProduct(products.data.products);
                     setShowLoader(false);
-                  }
-                  else {
+                    setRerender(false);
+                  } else {
                     setProduct([]);
                     setShowLoader(false);
+                    setRerender(false);
                   }
-
 
                   setRerender(false);
                 }
-
               },
-              (error) => { setShowLoader(false); setRerender(false); console.log("Unable to fetch Location") },
+              (error) => {
+                setShowLoader(false);
+                setRerender(false);
+                console.log('Unable to fetch Location');
+              },
               {
                 enableHighAccuracy: true,
                 timeout: 10000,
@@ -147,7 +150,6 @@ const AppContent = ({ navigation }) => {
               },
             );
         }
-
 
         console.log('getShopName', shopId);
         // if (product.length === 0) {
@@ -171,7 +173,7 @@ const AppContent = ({ navigation }) => {
         // }
       })();
     }
-  }, [getData.storeId, navigation, product.length]);
+  }, [getData.storeId, navigation, product.length, rerender]);
 
   BackHandler.addEventListener('hardwareBackPress', () => {
     // BackHandler.exitApp()
@@ -179,7 +181,7 @@ const AppContent = ({ navigation }) => {
   const navigate = () => {
     console.log('Cat data', getData.category);
 
-    navigation.navigate('Products', { title: 'Categories' });
+    navigation.navigate('Products', {title: 'Categories'});
   };
 
   const productDetails = (details: any) => {
@@ -195,14 +197,14 @@ const AppContent = ({ navigation }) => {
       });
     details.imageList = imageFinalArray;
     getData.productDescInfo = details; // setting data to store !!
-    navigation.navigate('ProductDetail', { title: 'Categories' });
+    navigation.navigate('ProductDetail', {title: 'Categories'});
   };
 
   return (
     <>
       {
         <LayoutContainer
-          style={{ marginBottom: 0 }}
+          style={{marginBottom: 0}}
           showsVerticalScrollIndicator={true}
           showsHorizontalScrollIndicator={false}
           marginTop={1}>
@@ -219,55 +221,58 @@ const AppContent = ({ navigation }) => {
           {showLoader ? (
             <ProductLoader />
           ) : (
-              !showLoader &&
-              product.length > 0 && (
-                <LayoutContainer marginTop={0}>
-                  <RowText paddingLeft={10} fontize={18} fontColor="black">
-                    Popular Products
+            !showLoader &&
+            product.length > 0 && (
+              <LayoutContainer marginTop={0}>
+                <RowText paddingLeft={10} fontize={18} fontColor="black">
+                  Popular Products
                 </RowText>
-                  <ScrollView
-                    horizontal={true}
-                    style={{ flex: 1, height: 'auto', marginTop: 5 }}
-                    showsHorizontalScrollIndicator={false}>
-                    <Suspense fallback={<ProductLoader />}>
-                      {product && product.length > 0 ? (
-                        <FlatList
-                          style={{ height: 170 }}
-                          data={_uniqBy(product.splice(0, 6), 'pId')} // only Showing 6 Products
-                          horizontal
-                          renderItem={({ item }) => (
-                            <SingleProduct
-                              elements={item}
-                              refresh={() => console.log('hello')}
-                              productDetail={productDetails}
-                            />
-                          )}
-                          keyExtractor={(item) => item._id}
-                        />
-                      ) : (
-                          // eslint-disable-next-line react-native/no-inline-styles
-                          <View
-                            // eslint-disable-next-line react-native/no-inline-styles
-                            style={{
-                              alignItems: 'center',
-                              width: 400,
-                              paddingBottom: 30,
-                            }}>
-                            {!showLoader && (
-                              <RowText
-                                fontColor="black"
-                                fontFormat="Italic"
-                                fontize={14}>
-                                No Product Found ..
-                              </RowText>
-                            )}
-                          </View>
+                <ScrollView
+                  horizontal={true}
+                  style={{flex: 1, height: 'auto', marginTop: 5}}
+                  showsHorizontalScrollIndicator={false}>
+                  <Suspense fallback={<ProductLoader />}>
+                    {product.length > 0 ? (
+                      <FlatList
+                        style={{height: 170}}
+                        data={_uniqBy(
+                          product.splice(0, product.length / 3),
+                          'pId',
+                        )} // only Showing 6 Products
+                        horizontal
+                        renderItem={({item}) => (
+                          <SingleProduct
+                            elements={item}
+                            refresh={() => console.log('hello')}
+                            productDetail={productDetails}
+                          />
                         )}
-                    </Suspense>
-                  </ScrollView>
-                </LayoutContainer>
-              )
-            )}
+                        keyExtractor={(item) => item._id}
+                      />
+                    ) : (
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      <View
+                        // eslint-disable-next-line react-native/no-inline-styles
+                        style={{
+                          alignItems: 'center',
+                          width: 400,
+                          paddingBottom: 30,
+                        }}>
+                        {!showLoader && (
+                          <RowText
+                            fontColor="black"
+                            fontFormat="Italic"
+                            fontize={14}>
+                            No Product Found ..
+                          </RowText>
+                        )}
+                      </View>
+                    )}
+                  </Suspense>
+                </ScrollView>
+              </LayoutContainer>
+            )
+          )}
 
           {/* {showLoader ? (
             <ProductLoader />
@@ -315,14 +320,16 @@ const AppContent = ({ navigation }) => {
                 </>
               )
             )} */}
-          <FilterProducts isForeginData={false} navigation={navigation} isFooter={'show'} />
+          <FilterProducts
+            isForeginData={false}
+            navigation={navigation}
+            isFooter={'show'}
+          />
         </LayoutContainer>
-
       }
-      <MainAppFooter isMain={{ isMain: true, navigation: navigation }} />
+      <MainAppFooter isMain={{isMain: true, navigation: navigation}} />
     </>
   );
 };
-
 
 export default React.memo(AppContent);

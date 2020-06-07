@@ -46,6 +46,7 @@ const initialState = {
   rating: 1,
   userInfo: {} as Iuser,
   productList: [{} as productDetailsProps],
+  cloneProductList: [{} as productDetailsProps],
   shopId: {},
   productDescInfo: {} as productDetailsProps,
   storeId: '' as string,
@@ -57,13 +58,13 @@ const initialState = {
 const reducer = (state: any, action: any) => {
   switch (action.Type) {
     case Actions.RATING:
-      return { ...state, rating: action.value };
+      return {...state, rating: action.value};
     case Actions.RESET:
-      return { ...state, rating: action.value };
+      return {...state, rating: action.value};
     case Actions.PRODUCT_LIST:
-      return { ...state, productList: action.value };
+      return {...state, productList: action.value};
     default:
-      return { ...state, ...initialState };
+      return {...state, ...initialState};
   }
 };
 
@@ -76,10 +77,9 @@ const Provider = (children: any) => {
   const value = {
     rating: state.rating,
     item: state.item,
-    productList: () => dispatch({ type: Actions.PRODUCT_LIST }),
-    reset: () => dispatch({ type: Actions.RESET }),
+    productList: () => dispatch({type: Actions.PRODUCT_LIST}),
+    reset: () => dispatch({type: Actions.RESET}),
   };
-
   return (
     <ApplicationContext.Provider value={value}>
       {children.children}

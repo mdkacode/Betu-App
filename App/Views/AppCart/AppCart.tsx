@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { LayoutContainer } from '../../Modules/GlobalStyles/GlobalStyle';
+import React, {useContext, useState} from 'react';
+import {LayoutContainer} from '../../Modules/GlobalStyles/GlobalStyle';
 import ListProduct from '../../Components/ListProduct/ListProduct';
 import MainAppFooter from '../AppFooter/AppFooter';
-import { View, AsyncStorage } from 'react-native';
-import { ApplicationContext, ApplicationConumer } from '../../Modules/context';
+import {View, AsyncStorage} from 'react-native';
+import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 
-const AppCart = ({ navigation }) => {
+const AppCart = ({navigation}) => {
   let storeData = useContext(ApplicationContext);
   let [appCart, setAppCart] = useState(0);
   // storeData.productList.shift();
@@ -18,28 +18,33 @@ const AppCart = ({ navigation }) => {
   //   cartProductsData = storeData.productList;
   // }
   const isResresh = () => {
-    console.log("getme somewhere");
-    setAppCart(appCart++)
-  }
+    console.log(appCart, 'READ THINGS');
+    setAppCart(appCart++);
+  };
 
-  console.log('LIST CART PRODUCTS', storeData.productList);
+  console.log('CHECK FOR THE BLANK OBJECT', storeData.productList);
   var cartProducts = storeData.productList.filter(
-    (value) => JSON.stringify(value) !== '{}',
+    (value) => JSON.stringify(value) !== ('{}' || null),
   );
-  //console.log(storeData);
+  //
   return (
     <React.Fragment>
       <LayoutContainer
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         marginTop={1}
-        style={{ paddingBottom: 100 }}>
-        <View style={{ flexDirection: 'column', paddingBottom: 50 }}>
+        style={{paddingBottom: 100}}>
+        <View style={{flexDirection: 'column', paddingBottom: 50}}>
           {cartProducts.length > 0 &&
-            cartProducts.map((e) => <ListProduct refresh={() => isResresh()} elements={e} />)}
+            cartProducts.map((e) => (
+              <ListProduct navigation={navigation} refresh={() => isResresh()} elements={e} />
+            ))}
         </View>
       </LayoutContainer>
-      <MainAppFooter count={appCart} isMain={{ isMain: false, navigation: navigation }} />
+      <MainAppFooter
+        count={appCart}
+        isMain={{isMain: false, navigation: navigation}}
+      />
     </React.Fragment>
   );
 };

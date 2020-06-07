@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, Suspense } from 'react';
 import { ScrollView, View, Dimensions, TouchableOpacity } from 'react-native';
 import { ApplicationContext } from '../../Modules/context';
-import FastImage from 'react-native-fast-image';
 import {
   IconImage,
   RowText,
@@ -58,7 +57,7 @@ const Categories = (props: catProps) => {
               <CircleArea height={500} width={windowWidth / 6}>
                 <View style={{ flex: 1, flexDirection: 'column' }}>
                   <Images
-                    source={[{ uri: element.imageList[0] },
+                    source={[{ uri: typeof element.imageList[0] == "string" ? element.imageList[0] : 'https://via.placeholder.com/250' },
                     require("../../assets/images/Placeholder/no-camera.png")]}
                     style={{
                       width: 35,

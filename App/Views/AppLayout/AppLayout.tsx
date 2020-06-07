@@ -59,7 +59,7 @@ const AppLayout = () => {
               backgroundColor: '#fff',
             },
           }}>
-          {userToken.current == ('true' || true) ? (
+          {userToken.current === ('true' || true) ? (
             <Stack.Screen
               name="Home"
               component={AppContent}

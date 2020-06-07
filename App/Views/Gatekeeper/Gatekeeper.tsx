@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
-import { PermissionsAndroid, Alert, DeviceEventEmitter } from 'react-native';
+import { PermissionsAndroid, Alert, DeviceEventEmitter, BackHandler } from 'react-native';
 import { getPhoneNumber, getUniqueId } from 'react-native-device-info';
 import { LayoutContainer, RowText } from '../../Modules/GlobalStyles/GlobalStyle';
 import { View, Animated, Keyboard } from 'react-native';
@@ -27,6 +27,7 @@ const GateKeeper = ({ navigation }) => {
   let [verifyData, setVerifyData] = useState('');
   let [latLong, setlatLong] = useState({} as { lat: string; long: string });
 
+  BackHandler.addEventListener('hardwareBackPress', () => { return true });
   useEffect(() => {
     userPhone === '' &&
       (async function () {
@@ -58,7 +59,7 @@ const GateKeeper = ({ navigation }) => {
             },
             (error) => console.log(error.message),
             {
-              enableHighAccuracy: false,
+              enableHighAccuracy: true,
               timeout: 20000,
               maximumAge: 1000,
             },
@@ -80,7 +81,7 @@ const GateKeeper = ({ navigation }) => {
         if (userUpdate) {
           setShowUserUpdate(true);
         }
-        navigation.navigate('MainHome');
+        navigation.navigate('Home');
       }
     }
   };
