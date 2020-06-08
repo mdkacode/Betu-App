@@ -5,7 +5,6 @@ import BackgroundTask from 'react-native-background-task';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const backgroundMagic = () => {
-    console.log("INVOKING IT");
     BackgroundTask.define(async () => {
         // Fetch some data over the network which we want the user to have an up-to-
         // date copy of, even if they have no network when using the app
@@ -18,7 +17,6 @@ const backgroundMagic = () => {
         await AsyncStorage.removeItem('@long');
 
         // Remember to call finish()
-        console.log('Hello from a background task')
         BackgroundTask.finish()
     })
     BackgroundTask.schedule({
@@ -28,7 +26,6 @@ const backgroundMagic = () => {
 const productsList = async (lat: any, long: any) => {
     const geoShops = await api.get(`shopkeeper/bygeo?lat=${lat}&long=${long}&distance=8000`);
     const shopIds = [];
-    console.log(geoShops.data.message, "qwertytrewertrewer");
     const getData = async () => {
         return Promise.all(
             geoShops.data.message.map((shopid: object) =>
@@ -37,7 +34,6 @@ const productsList = async (lat: any, long: any) => {
         );
     };
     let shopdata = await getData();
-    console.log(shopIds, "qwertyuytrewq");
     const getProducts = await api.get(
         `ShopProducts/allProducts?shopIds=${shopIds.join()}`,
     );
@@ -54,7 +50,6 @@ const nearbyShopkeeper = async (lat: any, long: any) => {
     else {
         shops = [];
     }
-    console.log('GET PRODUCTS', shops);
     return shops;
 };
 

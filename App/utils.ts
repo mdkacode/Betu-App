@@ -7,12 +7,8 @@ const trimText = (mytextvar: string, maxlimit: number = 12) => {
 const transformArray = (userData: any) => {
   let setData: any = [];
   userData.map((e: any) => e.shop_id && setData.push(e.shop_id));
-
-  // console.log(setData)
   let sset = new Set(setData);
-  // console.log(sset);
-  // console.log(...sset)
-
+ 
   let finalArra: any = [];
   let prodcucts: any = [];
 

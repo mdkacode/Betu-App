@@ -7,6 +7,7 @@ import {Darkest, RupeeSymbol} from '../../Modules/GlobalStyles/GlobalColors';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Images from '../SafeImage/SafeImage';
+import AsyncStorage from '@react-native-community/async-storage';
 interface Iprice {
   mrp: number;
   sp: number;
@@ -87,8 +88,17 @@ const ListProduct = (props: IremoteProps) => {
     if (getData.storeId) {
       tempVar.shop_id = getData.storeId; // temp Fix For data
     }
-    tempVar.userId = getData.userid;
-    let isItemExists = productList.findIndex((e) => e._id == tempVar._id);
+
+    let storedUserId = await AsyncStorage.getItem('@userPhone');
+    tempVar.userId = storedUserId;
+    let isItemExists;
+    try {
+      isItemExists = productList.findIndex((e) => e._id == tempVar._id);
+    } catch (error) {
+      isItemExists = -1;
+      productList = [];
+    }
+
     if (orderCount === 0) {
       productList.splice(isItemExists, 1);
     } else {
@@ -102,7 +112,6 @@ const ListProduct = (props: IremoteProps) => {
     try {
       props.refresh();
     } catch (e) {
-      console.log(e, 'CARTLIST ADDITION ERROR');
     }
   };
   const ProductDetail = (productDetail: any) => {
@@ -125,59 +134,61 @@ const ListProduct = (props: IremoteProps) => {
     <ApplicationConumer>
       {() => (
         <Suspense fallback={<RowText fontize={20}>Loading</RowText>}>
-          <ListItem
-            containerStyle={[
-              {backgroundColor: '#fff', elevation: 15, marginBottom: 1},
-            ]}
-            leftElement={
-              <Images
-                source={[
-                  {
-                    uri:
-                      typeof imageList[0] == 'string'
-                        ? imageList[0]
-                        : 'https://via.placeholder.com/250',
-                  },
-                  require('../../assets/images/Placeholder/no-camera.png'),
-                ]}
-                style={{width: 40, height: 40}}
-              />
-            }
-            key={'product'}
-            subtitle={
-              <View style={{flexDirection: 'row'}}>
-                {price && price.sp !== price.mrp && (
+          {
+            <ListItem
+              containerStyle={[
+                {backgroundColor: '#fff', elevation: 15, marginBottom: 1},
+              ]}
+              leftElement={
+                <Images
+                  source={[
+                    {
+                      uri:
+                        typeof imageList[0] === 'string'
+                          ? imageList[0]
+                          : 'https://via.placeholder.com/250',
+                    },
+                    require('../../assets/images/Placeholder/no-camera.png'),
+                  ]}
+                  style={{width: 40, height: 40}}
+                />
+              }
+              key={'product'}
+              subtitle={
+                <View style={{flexDirection: 'row'}}>
+                  {price && price.sp !== price.mrp && (
+                    <RowText
+                      fontColor={'red'}
+                      fontize={12}
+                      cut={true}
+                      fontFormat="Italic">
+                      {`${RupeeSymbol} ${price ? price.mrp : 'No Price Found'}`}
+                    </RowText>
+                  )}
                   <RowText
-                    fontColor={'red'}
-                    fontize={12}
-                    cut={true}
-                    fontFormat="Italic">
-                    {`${RupeeSymbol} ${price ? price.mrp : 'No Price Found'}`}
+                    style={{paddingLeft: 5}}
+                    fontColor={'green'}
+                    fontize={14}>
+                    {`${RupeeSymbol} ${price ? price.sp : 'No Price Found'}`}
                   </RowText>
-                )}
-                <RowText
-                  style={{paddingLeft: 5}}
-                  fontColor={'green'}
-                  fontize={14}>
-                  {`${RupeeSymbol} ${price ? price.sp : 'No Price Found'}`}
-                </RowText>
-              </View>
-            }
-            title={
-              <TouchableOpacity onPress={() => ProductDetail(props.elements)}>
-                <RowText fontColor={'black'} fontize={14}>
-                  {name}
-                </RowText>
-              </TouchableOpacity>
-            }
-            rightTitle={
-              <AddRemoveBtn
-                remoteValues={actionObject}
-                defaultValue={iniValue}
-                toggleAction={incDec}
-              />
-            }
-          />
+                </View>
+              }
+              title={
+                <TouchableOpacity onPress={() => ProductDetail(props.elements)}>
+                  <RowText fontColor={'black'} fontize={14}>
+                    {name}
+                  </RowText>
+                </TouchableOpacity>
+              }
+              rightTitle={
+                <AddRemoveBtn
+                  remoteValues={actionObject}
+                  defaultValue={iniValue}
+                  toggleAction={incDec}
+                />
+              }
+            />
+          }
           <Divider style={{backgroundColor: '#fff', elevation: 15}} />
         </Suspense>
       )}

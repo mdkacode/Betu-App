@@ -37,11 +37,9 @@ const FilterProducts = (props: IFilterProps) => {
 
   if (typeof elements !== 'object' || isForeginData == false) {
     useEffect(() => {
-      console.log('WERTYUIOKJBVCDWERTYUIJHVCVGHUIUHGVCVGHIHVCHIHVCV');
       setproductLoader(true);
       const fetchProducts = async () => {
         // if (!isFooter) setlocalIsFooter(true);
-        console.log('qwertyuiuytrewerthjhgfe');
         const lat = await AsyncStorage.getItem('@lat');
         const long = await AsyncStorage.getItem('@long');
         try {
@@ -50,14 +48,11 @@ const FilterProducts = (props: IFilterProps) => {
           if (localProducts.length === 0) {
             localProducts = await services.productsList(lat, long); // fetching API
           }
-          console.log('localProductssdsdsddsdsd', localProducts);
           setMasterProductList(localProducts.data.products);
           setconstMasterProductList(localProducts.data.products);
           setproductLoader(false);
         } catch (e) {
           const products = await services.productsList(lat, long); // fetching API
-          console.log('GET PRODUCTS');
-          console.log(products.data.products);
           setMasterProductList(products.data.products);
           setconstMasterProductList(products.data.products);
           setproductLoader(false);
@@ -68,7 +63,6 @@ const FilterProducts = (props: IFilterProps) => {
   }
   // content Refrsh here
   const isResresh = () => {
-    console.log('getme somewhere');
     // setAppCart(appCart++) => if wanted to add footer the add state and enable it
   };
   const filterProducts = (search: string) => {
@@ -87,7 +81,6 @@ const FilterProducts = (props: IFilterProps) => {
   //   content Refrsh here
 
   let listElements = isForeginData === false ? masterProductList : elements;
-  console.log('GET ACTUAL CHECKDATA', isForeginData);
   return (
     <React.Suspense fallback={<RowText fontColor="black">Hello</RowText>}>
       <Textinput

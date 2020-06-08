@@ -74,7 +74,13 @@ const SingleProduct = (props: IremoteProps) => {
 
     let tempVar = props.elements;
     tempVar.quantity = orderCount;
-    let isItemExists = productList.findIndex((e) => e._id == tempVar._id);
+    let isItemExists;
+    try {
+      isItemExists = productList.findIndex((e) => e._id == tempVar._id);
+    } catch (e) {
+      isItemExists = -1;
+      productList = [];
+    }
 
     if (isItemExists === -1) {
       productList.push(tempVar);
@@ -89,8 +95,6 @@ const SingleProduct = (props: IremoteProps) => {
       await AsyncStorage.removeItem('@localCartItem');
       await AsyncStorage.setItem('@localCartItem', JSON.stringify(productList));
     } catch (error) {}
-
-    console.log(productList, 'Cart Addition Error');
   };
   // Get Active product Object End Here
   return (

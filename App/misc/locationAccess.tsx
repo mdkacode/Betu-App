@@ -14,10 +14,10 @@ const AccessLocation = () => {
         preventBackClick: true, // true => To prevent the location services popup from closing when it is clicked back button
         providerListener: true // true ==> Trigger locationProviderStatusChange listener when the location state changes
     }).then(function (success) {
-        console.log(success); // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
+        // console.log(success); // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
     }).catch((error) => {
         // BackHandler.exitApp();
-        console.log(error.message); // error.message => "disabled"
+        // console.log(error.message); // error.message => "disabled"
     });
 
 

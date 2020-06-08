@@ -51,15 +51,11 @@ const FooterActionContent = (props: ActionProps) => {
 
   let {navigation, action} = props;
   const payment = async (mode: string) => {
-    debugger;
     if (mode === 'cod') {
       propsData.paymentStatus = true; // for maiking success Screen
-      console.log('PAYMENT-FIX');
-      console.log(propsData.productList);
+     
       let productInfo = utils.transformArray(propsData.productList);
-      console.log(productInfo, 'Products to Lead !!');
       let getuserId = await AsyncStorage.getItem('@userPhone');
-      console.log(getuserId, 'USER ID TO HANDLE');
       productInfo.map((ele: object) => {
         if (ele.storeId) {
           ele.tranasctionNumber = '';
@@ -68,9 +64,6 @@ const FooterActionContent = (props: ActionProps) => {
         }
       });
       let masterProd = productInfo;
-      console.log(masterProd, 'Final List Here');
-      console.log(masterProd, 'Final List Here after splice');
-      console.log(getuserId,"FINAL USER LIST ");
       let responseData = await cartServices.addOrder(getuserId, ...masterProd);
       propsData.productList = [];
       setPayment(false);
@@ -146,7 +139,7 @@ const FooterActionContent = (props: ActionProps) => {
     let totalSaving = 0;
 
     propsData.productList.map((element: object, index: number) => {
-      if (element.price && element.quantity) {
+      if (element.price && element.quantity > 0) {
         total += parseInt(element.price.sp) * parseInt(element.quantity);
         totalSaving += parseInt(element.price.mrp) * parseInt(element.quantity);
       }

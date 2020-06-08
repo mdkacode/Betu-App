@@ -33,7 +33,7 @@ const Categories = (props: catProps) => {
     });
   }, []);
   const selectCategory = (data: any) => {
-    // console.log(data);
+
     storeData.category = {
       _id: data._id,
       name: data.name,

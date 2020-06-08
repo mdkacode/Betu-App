@@ -27,7 +27,6 @@ const Stack = createStackNavigator();
 
 
 const AppLayout = () => {
-  console.log('HERERHECHECLINFOOT');
   let userToken = useRef('false');
   const [isLogin, setLogin] = useState('false');
   useEffect(() => {
@@ -45,8 +44,6 @@ const AppLayout = () => {
     };
     bootstrapAsync();
   }, []);
-
-  console.log(userToken.current, "qazwxeddrfdewdedscew");
   return (
     <Suspense fallback={<SearchStoreLoader />}>
 

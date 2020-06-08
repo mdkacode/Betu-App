@@ -18,11 +18,9 @@ const AppCart = ({navigation}) => {
   //   cartProductsData = storeData.productList;
   // }
   const isResresh = () => {
-    console.log(appCart, 'READ THINGS');
     setAppCart(appCart++);
   };
 
-  console.log('CHECK FOR THE BLANK OBJECT', storeData.productList);
   var cartProducts = storeData.productList.filter(
     (value) => JSON.stringify(value) !== ('{}' || null),
   );
@@ -37,7 +35,11 @@ const AppCart = ({navigation}) => {
         <View style={{flexDirection: 'column', paddingBottom: 50}}>
           {cartProducts.length > 0 &&
             cartProducts.map((e) => (
-              <ListProduct navigation={navigation} refresh={() => isResresh()} elements={e} />
+              <ListProduct
+                navigation={navigation}
+                refresh={() => isResresh()}
+                elements={e}
+              />
             ))}
         </View>
       </LayoutContainer>

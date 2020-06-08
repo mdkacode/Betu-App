@@ -57,10 +57,7 @@ const Products = ({ navigation }) => {
     }
   });
   const getValueHere = () => {
-    console.log("GREAT THINGS");
-    console.log('GET USER HERE');
     let totalPrice = 0;
-    Alert.alert("payment");
     let discount = 0;
     getData.productList.forEach((e) => {
       e && e.price && (discount += (e.price.mrp - e.price.sp) * e.quantity);

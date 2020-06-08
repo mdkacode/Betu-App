@@ -19,8 +19,7 @@ class OfflineNotice extends PureComponent {
     componentDidMount() {
         // Subscribe
         const unsubscribe = NetInfo.addEventListener(state => {
-            console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
+           
             if (state.isConnected == false) {
                 Alert.alert("No Internet Connection");
                 this.setState({

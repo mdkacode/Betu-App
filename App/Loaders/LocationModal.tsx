@@ -45,7 +45,6 @@ const LocationModal = ({ navigation }) => {
     // }
   }
   useEffect(() => {
-    console.log('GETING SOMEWHERE ON EARTH');
     setShowLoader(true);
 
     (async function () {
@@ -66,7 +65,6 @@ const LocationModal = ({ navigation }) => {
   useEffect(() => { //will unmount
     return () => {
       setLocPopUp(false);
-      console.log('will unmount');
       setShowLoader(false);
     }
   }, []);
@@ -83,7 +81,7 @@ const LocationModal = ({ navigation }) => {
         getAddress.includes(text)
       );
     });
-    // console.log(perSistData);
+    
     setShops(text.length === 0 ? perSistData : searchedShops);
   };
 
@@ -92,10 +90,9 @@ const LocationModal = ({ navigation }) => {
     setShowLoader(true);
     store.storeId = e._id;
 
-    console.log(e._id, "GTETTTTTTTTTTTTTTTTTTTTT")
+    
     await AsyncStorage.setItem('ShopId', e.productListId);
-    console.log('anragbetu', e);
-
+   
     // await removeItemValue('@allProducts');
 
     await Axios({
@@ -106,7 +103,6 @@ const LocationModal = ({ navigation }) => {
         if (prod.data.products.length === 0) {
           // navigation.navigate('LocationModal');
         } else {
-          console.log('get Product Data', prod.data.products);
           // await removeItemValue
           await AsyncStorage.setItem('@shopListData', JSON.stringify(prod.data.products));
           setListProducts(prod.data.products);

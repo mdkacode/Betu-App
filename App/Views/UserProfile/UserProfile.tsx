@@ -61,8 +61,7 @@ const UserProfile = ({navigation}) => {
       let userPhone = await AsyncStorage.getItem('@userPhone');
       let userPlacedData = await cartApi.fetchPlacedOrder(userPhone);
       let getUserInfo = await userService.getUserProfile(userPhone);
-      console.log(getUserInfo, 'qwertyuioiuytrew');
-      console.log(userPlacedData.data);
+     
       setUserProfile(getUserInfo[0]);
       setCartElements(userPlacedData.data.reverse());
     };
@@ -135,7 +134,6 @@ const UserProfile = ({navigation}) => {
     let lat = await AsyncStorage.getItem('@lat');
     let long = await AsyncStorage.getItem('@long');
     let response = await userService.userLocation(lat, long);
-    console.log('qwewqwqwqwewqwq', response[0].address);
     setcurrentAddress({
       area: response[0].title,
       city: response[0].address.city,
@@ -145,7 +143,7 @@ const UserProfile = ({navigation}) => {
   };
 
   const showProductsList = (products: any = null, total: any = null) => {
-    console.log(products, 'TOTAL PRODUCTS');
+   
     setProductElemets(products);
     settotalCart(total);
     setProductList(true);

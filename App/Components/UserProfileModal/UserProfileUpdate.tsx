@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, Alert, StyleSheet} from 'react-native';
 import {useForm} from 'react-hook-form';
 import _get from 'lodash/get';
@@ -42,7 +42,7 @@ const UserProfileUpdate = (props: IupdateUser) => {
   useEffect(() => {
     getStatus && getCall();
     setStatus(false);
-  }, [getStatus, getCall]);
+  }, [getCall, getStatus]);
 
   const getCall = useCallback(async () => {
     let lat = await AsyncStorage.getItem('@lat');

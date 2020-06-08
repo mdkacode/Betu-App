@@ -13,22 +13,13 @@ interface FooterContent {
 }
 const FooterContent = (props: FooterContent) => {
   useEffect(() => {
-    console.log('Hello');
     console.log(props.isRefresh);
   }, [props.isRefresh]);
   let storeData = useContext(ApplicationContext);
-
-  console.log('qwertyuytrewessrty');
   const cartAction = () => {
-    console.log(
-      storeData.productList,
-      'UPDATE PRODUCT LIST',
-      storeData.productList.length,
-    );
     storeData.productList.length > 0
       ? props.action('Cart')
       : Alert.alert('Please Add Product');
-    console.log('GET VALUE', storeData.productList.length);
   };
   return (
     <Container>
