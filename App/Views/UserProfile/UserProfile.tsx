@@ -77,7 +77,7 @@ const UserProfile = ({navigation}) => {
   }, [register, cartElemets]);
   let dataStore = useContext(ApplicationContext);
   let [isModalVisible, setModalVisible] = useState(false);
-  let [productList, setProductList] = useState(false);
+  let [cartProductList, setProductList] = useState(false);
   let [currentAddress, setcurrentAddress] = useState({} as Iuser);
 
   let {name, emailId, phone, addresses} = dataStore.userInfo;
@@ -85,7 +85,7 @@ const UserProfile = ({navigation}) => {
   const logout = async () => {
     await clearAppData();
     dataStore.userInfo = {};
-    dataStore.productList = {};
+    dataStore.productList = [];
     try {
       await AsyncStorage.removeItem('@LoginStatus');
     } catch (error) {
@@ -151,8 +151,8 @@ const UserProfile = ({navigation}) => {
 
   return (
     <React.Suspense fallback={<RowText fontColor="black">Loading</RowText>}>
-      {productList ? (
-        <Modal style={styles.modal} isVisible={productList}>
+      {cartProductList ? (
+        <Modal style={styles.modal} isVisible={cartProductList}>
           <ScrollView>
             {productElemets.map((product) => (
               <ListItem
