@@ -74,7 +74,7 @@ const UserProfile = ({navigation}) => {
     register('area');
     register('city');
     register('pincode');
-  }, [register, cartElemets]);
+  }, [register, cartElemets, fetched]);
   let dataStore = useContext(ApplicationContext);
   let [isModalVisible, setModalVisible] = useState(false);
   let [cartProductList, setProductList] = useState(false);
