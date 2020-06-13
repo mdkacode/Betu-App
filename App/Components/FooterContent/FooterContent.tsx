@@ -13,7 +13,6 @@ interface FooterContent {
 }
 const FooterContent = (props: FooterContent) => {
   useEffect(() => {
-    console.log(props.isRefresh);
   }, [props.isRefresh]);
   let storeData = useContext(ApplicationContext);
   const cartAction = () => {

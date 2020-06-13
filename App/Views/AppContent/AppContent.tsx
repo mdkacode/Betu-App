@@ -113,32 +113,11 @@ const AppContent = ({navigation}) => {
               },
               {
                 enableHighAccuracy: true,
-                timeout: 10000,
+                timeout: 1000,
                 maximumAge: 1000,
               },
             );
         }
-
-        console.log('getShopName', shopId);
-        // if (product.length === 0) {
-        //   await Axios({
-        //     method: 'GET',
-        //     url: `${serverIP}/api/ShopProducts/namelist?_id=${shopId}`,
-        //   })
-        //     .then((prod: any) => {
-        //       if (prod.data.products.length === 0) {
-        //         // navigation.navigate('LocationModal');
-        //       } else {
-        //         setShowLoader(false);
-        //         setProduct(prod.data.products);
-        //       }
-        //     })
-        //     .catch((e: any) => {
-        //       console.log(e);
-        //       setShowLoader(false);
-        //       // navigation.navigate('LocationModal');
-        //     });
-        // }
       })();
     }
   }, [getData.storeId, navigation, product.length, rerender]);
@@ -181,108 +160,6 @@ const AppContent = ({navigation}) => {
             <Categories action={() => navigate()} />
           </Suspense>
 
-          {showLoader ? (
-            <ProductLoader />
-          ) : (
-            !showLoader &&
-            product.length > 0 && (
-              <LayoutContainer marginTop={0}>
-                <RowText paddingLeft={10} fontize={18} fontColor="black">
-                  Popular Products
-                </RowText>
-                <ScrollView
-                  horizontal={true}
-                  style={{flex: 1, height: 'auto', marginTop: 5}}
-                  showsHorizontalScrollIndicator={false}>
-                  {/* <Suspense fallback={<ProductLoader />}>
-                    {product.length > 0 ? (
-                      <FlatList
-                        style={{height: 170}}
-                        data={_uniqBy(
-                          product.splice(0, product.length / 3),
-                          'pId',
-                        )} // only Showing 6 Products
-                        horizontal
-                        renderItem={({item}) => (
-                          <SingleProduct
-                            elements={item}
-                            refresh={() => console.log('hello')}
-                            productDetail={productDetails}
-                          />
-                        )}
-                        keyExtractor={(item) => item._id}
-                      />
-                    ) : (
-                      // eslint-disable-next-line react-native/no-inline-styles
-                      <View
-                        // eslint-disable-next-line react-native/no-inline-styles
-                        style={{
-                          alignItems: 'center',
-                          width: 400,
-                          paddingBottom: 30,
-                        }}>
-                        {!showLoader && (
-                          <RowText
-                            fontColor="black"
-                            fontFormat="Italic"
-                            fontize={14}>
-                            No Product Found ..
-                          </RowText>
-                        )}
-                      </View>
-                    )}
-                  </Suspense> */}
-                </ScrollView>
-              </LayoutContainer>
-            )
-          )}
-
-          {/* {showLoader ? (
-            <ProductLoader />
-          ) : (
-              !showLoader &&
-              product.length > 1 && (
-                <>
-                  <RowText paddingLeft={10} fontize={18} fontColor="black">
-                    New Products
-                </RowText>
-                  <ScrollView
-                    horizontal={true}
-                    style={{ flex: 1, height: 'auto', marginTop: 0, marginBottom: 15 }}
-                    showsHorizontalScrollIndicator={false}>
-                    <Suspense fallback={<ProductLoader />}>
-                      {product.length > 0 ? (
-                        <FlatList
-                          style={{ height: 160 }}
-                          data={_uniqBy(product, "pId")}
-                          horizontal
-                          renderItem={({ item }) => (
-                            <SingleProduct
-                              elements={item}
-                              refresh={() => console.log('hello')}
-                              productDetail={productDetails}
-                            />
-                          )}
-                          keyExtractor={(item) => item._id}
-                        />
-                      ) : (
-                          // eslint-disable-next-line react-native/no-inline-styles
-                          <View style={{ alignItems: 'center', width: 400 }}>
-                            {!showLoader && (
-                              <RowText
-                                fontColor="black"
-                                fontFormat="Italic"
-                                fontize={14}>
-                                No Product Found ..
-                              </RowText>
-                            )}
-                          </View>
-                        )}
-                    </Suspense>
-                  </ScrollView>
-                </>
-              )
-            )} */}
           <FilterProducts
             isForeginData={false}
             navigation={navigation}
