@@ -116,7 +116,8 @@ const SingleProduct = (props: IremoteProps) => {
               marginLeft: 10,
             }}>
             <TouchableOpacity
-              onPress={() => props.productDetail(props.elements)}>
+              // onPress={() => props.productDetail(props.elements)}
+              >
               <Images
                 style={{
                   width: 70,

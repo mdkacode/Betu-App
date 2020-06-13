@@ -6,7 +6,7 @@ import {Button} from 'react-native-elements';
 import {Divider} from 'react-native-elements';
 import Modal from 'react-native-modal';
 import {ApplicationContext, ApplicationConumer} from '../../Modules/context';
-import RazorpayCheckout from 'react-native-razorpay';
+// import RazorpayCheckout from 'react-native-razorpay';
 import RNUpiPayment from 'react-native-upi-payment';
 
 import {

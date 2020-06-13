@@ -16,7 +16,7 @@ import services from '../../services/products.api';
 const Categories = React.lazy(() =>
     import('../../Components/Categories/Categories'),
   ),
-  MyCorsoal = React.lazy(() => import('../../Components/Corusal/corusoal')),
+  // MyCorsoal = React.lazy(() => import('../../Components/Corusal/corusoal')),
   SingleProduct = React.lazy(() =>
     import('../../Components/SingleProduct/SingleProduct'),
   ),
@@ -33,38 +33,6 @@ import ProductLoader from '../../Loaders/ProductLoader';
 import AsyncStorage from '@react-native-community/async-storage';
 import FilterProducts from '../FilterProducts/FilterProducts';
 
-const productDescription = [
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://cdn.pixabay.com/photo/2016/03/05/19/02/vegetables-1238252_1280.jpg',
-  },
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://cdn.pixabay.com/photo/2017/06/02/18/24/fruit-2367029_1280.jpg',
-  },
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://cdn.pixabay.com/photo/2016/06/29/19/54/healthy-food-1487647_1280.jpg',
-  },
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://cdn.pixabay.com/photo/2017/06/06/22/37/italian-cuisine-2378729_1280.jpg',
-  },
-  {
-    title: 'Pepsi',
-    subtitle: 'Pepsi',
-    illustration:
-      'https://cdn.pixabay.com/photo/2017/06/02/18/24/fruit-2367029_1280.jpg',
-  },
-];
 
 // const file = require("../../assets/Actions/Payments/Success.json")
 const AppContent = ({navigation}) => {
@@ -208,11 +176,6 @@ const AppContent = ({navigation}) => {
           showsVerticalScrollIndicator={true}
           showsHorizontalScrollIndicator={false}
           marginTop={1}>
-          <Suspense fallback={<CategoryLoader />}>
-            <AppView width={width} height={200} marginHeight={10}>
-              <MyCorsoal content={productDescription} height={2} />
-            </AppView>
-          </Suspense>
 
           <Suspense fallback={<CategoryLoader />}>
             <Categories action={() => navigate()} />
@@ -231,7 +194,7 @@ const AppContent = ({navigation}) => {
                   horizontal={true}
                   style={{flex: 1, height: 'auto', marginTop: 5}}
                   showsHorizontalScrollIndicator={false}>
-                  <Suspense fallback={<ProductLoader />}>
+                  {/* <Suspense fallback={<ProductLoader />}>
                     {product.length > 0 ? (
                       <FlatList
                         style={{height: 170}}
@@ -268,7 +231,7 @@ const AppContent = ({navigation}) => {
                         )}
                       </View>
                     )}
-                  </Suspense>
+                  </Suspense> */}
                 </ScrollView>
               </LayoutContainer>
             )

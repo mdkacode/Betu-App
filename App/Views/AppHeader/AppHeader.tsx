@@ -32,7 +32,7 @@ const AppHeader = (props: NavProps) => {
             {props.titleName}
           </RowText>
         </AppView>
-        <AppView marginHeight={1} height={5} iPosition={'flex-end'}>
+        {/* <AppView marginHeight={1} height={5} iPosition={'flex-end'}>
           <TouchableOpacity onPress={locationHandler}>
             <IconImage
               source={require('../../assets/images/icons/search.png')}
@@ -40,7 +40,7 @@ const AppHeader = (props: NavProps) => {
               height={24}
             />
           </TouchableOpacity>
-        </AppView>
+        </AppView> */}
 
         {/* <AppView width={35} marginHeight={1} height={5} iPosition={'flex-end'}>
           <TouchableOpacity onPress={locationHandler}>

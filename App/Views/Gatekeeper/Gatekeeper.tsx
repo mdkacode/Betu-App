@@ -25,6 +25,7 @@ import UserProfileUpdate from '../../Components/UserProfileModal/UserProfileUpda
 const GateKeeper = ({navigation}) => {
   let dataStore = useContext(ApplicationContext);
   let [userPhone, setuserPhone] = useState('');
+  let [locationCheck, setlocationCheck] = useState(false);
   let [localOtp, setlocalOtp] = useState('');
   let [userUpdate, setUserUpdate] = useState(false);
   let [showUserUpdate, setShowUserUpdate] = useState(false);
@@ -35,7 +36,7 @@ const GateKeeper = ({navigation}) => {
     return true;
   });
   useEffect(() => {
-    userPhone === '' &&
+    userPhone === '' &&  locationCheck === false &&
       (async function () {
         LocationCheck();
         let locationPermission = await PermissionsAndroid.request(
@@ -59,7 +60,7 @@ const GateKeeper = ({navigation}) => {
               AsyncStorage.setItem('@long', currentLongitude.toString());
               setlatLong({lat: currentLatitude, long: currentLongitude});
             },
-            (error) => console.log(error.message),
+            (error) => console.log(error.message,"ERROR"),
             {
               enableHighAccuracy: true,
               timeout: 20000,
@@ -71,19 +72,27 @@ const GateKeeper = ({navigation}) => {
           number.substring(number.length - 10);
           setuserPhone(number.substring(number.length - 10));
         }
+        setlocationCheck('true');
       })();
   });
 
   const SubmitOTP = async (text: string) => {
+    
     setlocalOtp(text);
     console.log(text, verifyData, 'asdfghgasdfg');
     if (text.length === 4) {
       if (text === verifyData) {
-        await AsyncStorage.setItem('@LoginStatus', 'true');
+        try {
+          await AsyncStorage.setItem('@LoginStatus', 'true');
+        } catch (error) {
+          
+        }
+       
         if (userUpdate) {
+          console.log(userUpdate,"GET DETAILS IN");
           setShowUserUpdate(true);
         }
-        navigation.navigate('MainHome');
+        navigation.navigate('Home');
       }
     }
   };
@@ -108,6 +117,15 @@ const GateKeeper = ({navigation}) => {
       })
         .then(async (response: any) => {
           console.log('GETDATAA', response.data.User[0]);
+          try {
+            await AsyncStorage.setItem('@userHomeLocation', response.data.User[0].addresses[0].area);
+            console.log(response.data.User[0].addresses[0].area,"USER LOCATION");
+          }
+          catch(e){
+            await AsyncStorage.setItem('@userHomeLocation', "Home");
+          }
+          
+         
           await AsyncStorage.setItem('@userPhone', response.data.User[0].phone);
           dataStore.userInfo = response.data.User[0];
           try {
@@ -116,10 +134,10 @@ const GateKeeper = ({navigation}) => {
             }
           } catch (error) {}
           setVerifyData(response.data.User[0].otp);
-          Alert.alert(response.data.User[0].otp);
           // console.log(verifyData, 'REMOTEOTP');
         })
         .catch((e) => {
+          Alert.alert("🖖 !! Please Enable Location \n and Try Again !! ");
           console.log('ERTRERERR', e);
         });
       Keyboard.dismiss();

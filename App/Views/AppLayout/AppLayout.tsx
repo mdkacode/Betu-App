@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { Suspense, useEffect, useState, useRef } from 'react';
+import React, { Suspense, useEffect, useState, useRef,useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BackHandler } from "react-native";
@@ -11,14 +11,13 @@ import GateKeeper from '../Gatekeeper/Gatekeeper';
 import Products from '../Products/Products';
 import SearchStoreLoader from '../../Loaders/SearchStoreLoader';
 import AsyncStorage from '@react-native-community/async-storage';
-import services from "../../services/products.api";
+import {ApplicationContext} from '../../Modules/context';
 const LocationModal = React.lazy(() => import('../../Loaders/LocationModal'));
 const AppHeader = React.lazy(() => import('../AppHeader/AppHeader'));
 const AppContent = React.lazy(() => import('../AppContent/AppContent'));
 const AppCart = React.lazy(() => import('../AppCart/AppCart'));
 const FilterProducts = React.lazy(() => import('../FilterProducts/FilterProducts'));
 const PaymentLayout = React.lazy(() => import('../PaymentLayout/PaymentLayout'));
-
 const ProductDetails = React.lazy(() =>
   import('../ProductDetail/ProductDetail'),
 );
@@ -29,16 +28,17 @@ const Stack = createStackNavigator();
 const AppLayout = () => {
   let userToken = useRef('false');
   const [isLogin, setLogin] = useState('false');
+ 
   useEffect(() => {
-
     LocationCheck();
     const bootstrapAsync = async () => {
       try {
-        services.backgroundMagic();
         userToken.current = await AsyncStorage.getItem('@LoginStatus');
+        let location = await AsyncStorage.getItem('@userHomeLocation');
+        
         setLogin(userToken);
       } catch (e) {
-
+        
         // Restoring token failed
       }
     };
@@ -56,14 +56,14 @@ const AppLayout = () => {
               backgroundColor: '#fff',
             },
           }}>
-          {userToken.current === ('true' || true) ? (
+          {isLogin === ('true' || true) ? (
             <Stack.Screen
               name="Home"
               component={AppContent}
               options={{
                 headerShown: true,
                 headerLeft: null,
-                headerTitle: () => <AppHeader titleName={'Home'} />,
+                headerTitle: () => <AppHeader titleName={"Home"} />,
               }}
             />
 
@@ -81,12 +81,12 @@ const AppLayout = () => {
 
 
           <Stack.Screen
-            name="MainHome"
+            name="Home"
             component={AppContent}
             options={{
               headerShown: true,
               headerLeft: null,
-              headerTitle: () => <AppHeader titleName={'Home'} />,
+              headerTitle: () => <AppHeader titleName={"Home"} />,
             }}
           />
           <Stack.Screen

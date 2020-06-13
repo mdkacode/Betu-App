@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, TouchableOpacity, Alert, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Alert, StyleSheet,ActivityIndicator} from 'react-native';
 import {useForm} from 'react-hook-form';
 import _get from 'lodash/get';
 import {Avatar, Divider, Button, ListItem} from 'react-native-elements';
@@ -88,6 +88,7 @@ const UserProfile = ({navigation}) => {
     dataStore.productList = [];
     try {
       await AsyncStorage.removeItem('@LoginStatus');
+      await AsyncStorage.removeItem('@userHomeLocation');
     } catch (error) {
       console.log('Removing it  Fail');
     }
@@ -261,7 +262,7 @@ const UserProfile = ({navigation}) => {
               {userProfile && userProfile.name}
             </RowText>
             <RowText
-              paddingLeft={15}
+              paddingLeft={90}
               fontFormat="Italic"
               fontColor={'black'}
               fontize={14}>

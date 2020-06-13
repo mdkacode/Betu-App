@@ -174,7 +174,9 @@ const ListProduct = (props: IremoteProps) => {
                 </View>
               }
               title={
-                <TouchableOpacity onPress={() => ProductDetail(props.elements)}>
+                <TouchableOpacity 
+                // onPress={() => ProductDetail(props.elements)}
+                >
                   <RowText fontColor={'black'} fontize={14}>
                     {name}
                   </RowText>
