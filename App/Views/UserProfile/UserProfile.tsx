@@ -87,8 +87,8 @@ const UserProfile = ({navigation}) => {
     dataStore.userInfo = {};
     dataStore.productList = [];
     try {
-      await AsyncStorage.removeItem('@LoginStatus');
-      await AsyncStorage.removeItem('@userHomeLocation');
+      let deleteLocal = ['@LoginStatus','@userHomeLocation','@allProducts'];
+      await AsyncStorage.multiRemove(deleteLocal);
     } catch (error) {
       console.log('Removing it  Fail');
     }
@@ -307,7 +307,7 @@ const UserProfile = ({navigation}) => {
                   <View
                     style={{
                       width: 220,
-                      height: 110,
+                      height: 140,
                       borderWidth: 0,
                       // alignItems: 'center',
                       justifyContent: 'center',
@@ -345,7 +345,7 @@ const UserProfile = ({navigation}) => {
                       paddingLeft={10}
                       fontColor={'black'}
                       fontFormat="Normal"
-                      fontize={20}>
+                      fontize={17}>
                       Total : {`${RupeeSymbol} ${e.total}`}
                     </RowText>
 

@@ -81,7 +81,7 @@ export default AddRemoveBtn;
 
 const style = StyleSheet.create({
   text: {
-    height: 35,
+    height: 40,
     color: 'black',
     borderColor: '#fff',
     borderWidth: 0,

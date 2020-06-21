@@ -2,10 +2,8 @@ import React, {useRef, useEffect, useState, useContext} from 'react';
 import {
   PermissionsAndroid,
   Alert,
-  DeviceEventEmitter,
   BackHandler,
 } from 'react-native';
-import {getPhoneNumber, getUniqueId} from 'react-native-device-info';
 import {LayoutContainer, RowText} from '../../Modules/GlobalStyles/GlobalStyle';
 import {View, Animated, Keyboard} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -20,6 +18,7 @@ import {ApplicationContext} from '../../Modules/context';
 import Axios from 'axios';
 import {serverIP} from '../../constant';
 import LocationCheck from '../../misc/locationAccess';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import UserProfileUpdate from '../../Components/UserProfileModal/UserProfileUpdate';
 
 const GateKeeper = ({navigation}) => {
@@ -36,50 +35,45 @@ const GateKeeper = ({navigation}) => {
     return true;
   });
   useEffect(() => {
-    userPhone === '' &&  locationCheck === false &&
+    locationCheck === false &&
       (async function () {
-        LocationCheck();
         let locationPermission = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
-        console.log(locationPermission, 'paramete');
-        let phoneLocation = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
-        );
         locationPermission == 'granted' &&
+        RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000}).then(data=>{
           Geolocation.getCurrentPosition(
-            //Will give you the current location
-            (position) => {
-              const currentLongitude = JSON.stringify(
-                position.coords.longitude,
-              );
-              //getting the Longitude from the location json
-              const currentLatitude = JSON.stringify(position.coords.latitude);
-              //getting the Latitude from the location json
-              AsyncStorage.setItem('@lat', currentLatitude.toString());
-              AsyncStorage.setItem('@long', currentLongitude.toString());
-              setlatLong({lat: currentLatitude, long: currentLongitude});
-            },
-            (error) => console.log(error.message,"ERROR"),
-            {
-              enableHighAccuracy: true,
-              timeout: 20000,
-              maximumAge: 1000,
-            },
+              //Will give you the current location
+              (position) => {
+                const currentLongitude = JSON.stringify(
+                    position.coords.longitude,
+                );
+                //getting the Longitude from the location json
+                const currentLatitude = JSON.stringify(position.coords.latitude);
+                //getting the Latitude from the location json
+                AsyncStorage.setItem('@lat', currentLatitude.toString());
+                AsyncStorage.setItem('@long', currentLongitude.toString());
+                setlatLong({lat: currentLatitude, long: currentLongitude});
+                console.log(currentLatitude,currentLongitude,"LLAAAAAA")
+              },
+              (error) => console.log(error.message,"ERROR"),
+              {
+                enableHighAccuracy: false,
+                timeout: 20000,
+                maximumAge: 1000,
+              },
           );
-        let number = phoneLocation === 'granted' ? await getPhoneNumber() : '';
-        if (number !== 'unknown') {
-          number.substring(number.length - 10);
-          setuserPhone(number.substring(number.length - 10));
-        }
-        setlocationCheck('true');
+          setlocationCheck('true');
+        }).catch(err=>{
+            console.log("Location not open")
+        })
+
       })();
   });
 
   const SubmitOTP = async (text: string) => {
     
     setlocalOtp(text);
-    console.log(text, verifyData, 'asdfghgasdfg');
     if (text.length === 4) {
       if (text === verifyData) {
         try {
@@ -131,6 +125,7 @@ const GateKeeper = ({navigation}) => {
           try {
             if (response.data.User[0].addresses.length === 0) {
               setUserUpdate(true);
+              dataStore.userUpdate = true;
             }
           } catch (error) {}
           setVerifyData(response.data.User[0].otp);
@@ -149,10 +144,9 @@ const GateKeeper = ({navigation}) => {
     }
   };
 
-  return showUserUpdate ? (
-    <UserProfileUpdate isShow={true} />
-  ) : (
+  return (
     <>
+   
       <LayoutContainer
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -170,7 +164,7 @@ const GateKeeper = ({navigation}) => {
             fontize={23}
             fontFormat="bold"
             style={{marginBottom: 10}}>
-            FIRZI
+            अपना App
           </RowText>
           <Textinput
             itemHeight={50}

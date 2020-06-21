@@ -7,7 +7,7 @@ const AccessLocation = () => {
         message: "<h2 style='color: #0af13e'>Enable Location ?</h2><br/>Use GPS location<br/><br/><h2 style='color: #0af13e'>Please restart the App</h2><br/><br/> No Location will exit App.",
         ok: "YES",
         cancel: "NO",
-        enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+        enableHighAccuracy: false, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
         showDialog: true, // false => Opens the Location access page directly
         openLocationServices: true, // false => Directly catch method is called if location services are turned off
         preventOutSideTouch: true, // true => To prevent the location services window from closing when it is clicked outside

@@ -1,7 +1,5 @@
 import React, {useContext, Suspense, useState, useEffect} from 'react';
 import Geolocation from '@react-native-community/geolocation';
-import Axios from 'axios';
-import _uniqBy from 'lodash/uniqBy';
 import {
   Dimensions,
   ScrollView,
@@ -29,6 +27,7 @@ import {
 } from '../../Modules/GlobalStyles/GlobalStyle';
 import {ApplicationContext} from '../../Modules/context';
 import CategoryLoader from '../../Loaders/CategoryLoader';
+import UserProfileUpdate from '../../Components/UserProfileModal/UserProfileUpdate';
 import ProductLoader from '../../Loaders/ProductLoader';
 import AsyncStorage from '@react-native-community/async-storage';
 import FilterProducts from '../FilterProducts/FilterProducts';
@@ -41,9 +40,27 @@ const AppContent = ({navigation}) => {
 
   const [rerender, setRerender] = useState(true);
   const [product, setProduct] = useState([]);
+  const [showUpdate, setShowUpdate] = useState(false);
+
   const getData = useContext(ApplicationContext);
+  
   useEffect(() => {
-    if (rerender) {
+    console.log(getData.userUpdate,"GET USER INFOR ");
+    (async function () {
+      try {
+        let userToken = await AsyncStorage.getItem('@LoginStatus');
+        if (userToken == 'true'){
+          navigation.navigate('Home');
+        }
+        else {
+          navigation.navigate('Login');
+        }
+      }catch (e) {
+        navigation.navigate('Login');
+      }
+    }())
+    if (rerender || getData.userUpdate) {
+
       setShowLoader(true);
       (async function () {
         let shopId = await AsyncStorage.getItem('ShopId');
@@ -88,7 +105,7 @@ const AppContent = ({navigation}) => {
                   let localProductData = await AsyncStorage.getItem(
                     '@allProducts',
                   );
-                  products = JSON.parse(localProductData);
+                  products = await services.productsList(lat, long); // fetching API
                   setProduct(products.data.products);
                   setShowLoader(false);
                 } catch (e) {
@@ -120,7 +137,9 @@ const AppContent = ({navigation}) => {
         }
       })();
     }
-  }, [getData.storeId, navigation, product.length, rerender]);
+    setShowUpdate(false);
+  },[getData.storeId, navigation, product.length, rerender]);
+
 
   BackHandler.addEventListener('hardwareBackPress', () => {
     // BackHandler.exitApp()
@@ -148,9 +167,11 @@ const AppContent = ({navigation}) => {
   };
 
   return (
+   
     <>
+   {  getData.userUpdate && <UserProfileUpdate isShow={true} /> }
       {
-        <LayoutContainer
+   <LayoutContainer
           style={{marginBottom: 0}}
           showsVerticalScrollIndicator={true}
           showsHorizontalScrollIndicator={false}

@@ -82,7 +82,7 @@ const FilterProducts = (props: IFilterProps) => {
 
   let listElements = isForeginData === false ? masterProductList : elements;
   return (
-    <React.Suspense fallback={<RowText fontColor="black">Hello</RowText>}>
+    <React.Suspense fallback={<RowText fontColor="black">No Product Find</RowText>}>
       <Textinput
         itemHeight={50}
         itemWitdh={DeviceWidth}
@@ -90,7 +90,8 @@ const FilterProducts = (props: IFilterProps) => {
         maxLength={13}
         style={{
           elevation: 10,
-          marginBottom: -15,
+          paddingLeft:10,
+          marginBottom: 0,
           backgroundColor: '#fff',
           paddingBottom: 0,
           alignSelf: 'center',

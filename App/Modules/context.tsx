@@ -45,6 +45,7 @@ interface Icategory {
 const initialState = {
   rating: 1,
   userInfo: {} as Iuser,
+  userUpdate: false,
   productList: [{} as productDetailsProps],
   cloneProductList: [{} as productDetailsProps],
   shopId: {},

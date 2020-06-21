@@ -129,12 +129,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.payal"
-        minSdkVersion 21
+        applicationId "com.shivola.daily"
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 3
         multiDexEnabled true
-        versionName "1.0"
+        versionName "1.2"
     }
     splits {
         abi {
@@ -194,7 +194,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-    compileOnly project(':react-native-android-location-services-dialog-box')
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
