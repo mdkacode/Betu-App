@@ -5025,10 +5025,10 @@ lodash@4.17.4:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
   integrity sha1-eCA6TRwyiuHYbcpkYONptX9AVa4=
 
-lodash@^4, lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.3.0:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+lodash@^4, lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.3.0:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 log-symbols@^2.2.0:
   version "2.2.0"
@@ -6211,11 +6211,6 @@ react-native-animatable@1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-background-task@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-background-task/-/react-native-background-task-0.2.1.tgz#9d110ed14b245e0d8b9ec8114ce24b33ddda65de"
-  integrity sha512-t5NvHWiqdIRf+KRUbeYH0QYSF3TTTe67g9TuOy/KbfU0KWqK1igLbQB/vw1o8nXZrWWIzSl9mSTG+2V/57TRzw==
-
 react-native-cached-image@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/react-native-cached-image/-/react-native-cached-image-1.4.3.tgz#0942e2cd078284a1f0438de8dfe17f2b36a89752"
@@ -6272,6 +6267,11 @@ react-native-fetch-blob@0.10.8, react-native-fetch-blob@^0.10.8:
     base-64 "0.1.0"
     glob "7.0.6"
 
+react-native-geolocation-service@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-5.2.0.tgz#eeb1c70cf842e612d68bc3d8706c0fdd917efaf5"
+  integrity sha512-ai7xd6QbLl6WMyEbPfXSaXyYQ/L6CDcPjOZAJYboqwNPclAqxGkzJHJQyvBNy9J410EIrDJg0p9KyaciXmxyCw==
+
 react-native-gesture-handler@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"
@@ -6312,11 +6312,6 @@ react-native-ratings@^6.5.0:
     lodash "^4.17.4"
     prop-types "^15.5.10"
 
-react-native-razorpay@^2.1.33:
-  version "2.1.33"
-  resolved "https://registry.yarnpkg.com/react-native-razorpay/-/react-native-razorpay-2.1.33.tgz#c68b6994428badf39b7cb577d5d7e8d8af8f2c6f"
-  integrity sha512-m9Cda5ajXioxaJDi+u/Espr+jEV8FZZ+5j3GDFQ0lE/wsxeMWnHaHOEnMZMbHhdGwxD+I9juuM73Q/Tk3nFzZQ==
-
 react-native-reanimated@^1.8.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.9.0.tgz#38676c99dd585504fdc7331efb45e5f48ec7339a"
@@ -6356,6 +6351,11 @@ react-native-snap-carousel@^3.9.0:
   dependencies:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
+
+react-native-splash-screen@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.2.0.tgz#d47ec8557b1ba988ee3ea98d01463081b60fff45"
+  integrity sha512-Ls9qiNZzW/OLFoI25wfjjAcrf2DZ975hn2vr6U9gyuxi2nooVbzQeFoQS5vQcbCt9QX5NY8ASEEAtlLdIa6KVg==
 
 react-native-status-bar-height@^2.2.0:
   version "2.5.0"
